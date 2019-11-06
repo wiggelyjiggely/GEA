@@ -1,0 +1,19 @@
+function Selch = tournament_selection_noreplacement(chrom,fitv,lambda,k)
+    [mu,chromsize] = size(chrom);
+    Selch = zeros(lambda,chromsize);
+    for v=1:lambda;
+        Tournament = zeros(k,chromsize);
+        TempFit = zeros(1,mu);
+        for c=1:k;
+            Randx = randperm(lambda);
+            Rand = Randx(1:k);
+            Tournament(c,:) = chrom(Rand(c),:);
+            TempFit(c) = fitv(Rand(c));
+        end
+%         Tournament((find(max(TempFit) == TempFit)),:)
+%         Selch(v,:)
+        Ind = find((max(TempFit) == TempFit));
+        Selch(v,:) =  Tournament(Ind,:);
+        Tournament(Ind,:) = [];
+    end
+end
