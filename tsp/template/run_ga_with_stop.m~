@@ -72,25 +72,26 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
             if (best(gen+1)-mean_fits(gen+1) / best(gen+1) <= STOP_PERCENTAGE_RATIO)
                   break;
             end 
-            if (gen > 0)
-                if ((best(gen+1)-best(gen) / best(gen+1)) <=  STOP_PERCENTAGE_BEST)
-                    numbBest = numbBest + 1;
-                    if (numbBest == STOP_GEN_BEST)
-                        break;
-                    end
-                else
-                    numbBest = 0;
+            if (gen > 1)
+            if ((best(gen+1)-best(gen) / best(gen+1)) <=  STOP_PERCENTAGE_BEST)
+                numbBest = numbBest + 1;
+                if (numbBest == STOP_GEN_BEST)
+                    break;
                 end
-
-                if ((mean_fits(gen+1)-mean_fits(gen) / mean_fits(gen+1)) <=  STOP_PERCENTAGE_AVERAGE)
-                    numbAverage = numbAverage + 1;
-                    if (numbAverage == STOP_GEN_AVERAGE)
-                        break;
-                    end
-                else
-                    numbAverage = 0;
+            else
+                numbBest = 0;
+            end
+            
+            if ((mean_fits(gen+1)-mean_fits(gen) / mean_fits(gen+1)) <=  STOP_PERCENTAGE_AVERAGE)
+                numbAverage = numbAverage + 1;
+                if (numbAverage == STOP_GEN_AVERAGE)
+                    break;
                 end
-            end          
+            else
+                numbAverage = 0;
+            end
+            
+            
             
         	%assign fitness values to entire population
         	FitnV=ranking(ObjV);
