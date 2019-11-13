@@ -21,8 +21,8 @@ function [mean_fits,minimum,best] = cust_run(x, y, NIND, MAXGEN, NVAR, ELITIST, 
 
 
         GGAP = 1 - ELITIST;
-        mean_fits=zeros(1,MAXGEN+1);
-        worst=zeros(1,MAXGEN+1);
+        mean_fits=zeros(1,MAXGEN);
+        worst=zeros(1,MAXGEN);
         Dist=zeros(NVAR,NVAR);
         for i=1:size(x,1)
             for j=1:size(y,1)
@@ -55,9 +55,9 @@ function [mean_fits,minimum,best] = cust_run(x, y, NIND, MAXGEN, NVAR, ELITIST, 
             end
             
             
-            if (sObjV(stopN)-sObjV(1) <= 1e-15)
-                  break;
-            end          
+            %if (sObjV(stopN)-sObjV(1) <= 1e-15)
+            %      break;
+            %end          
         	%assign fitness values to entire population
         	FitnV=ranking(ObjV);
         	%select individuals for breeding
