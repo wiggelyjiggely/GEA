@@ -13,5 +13,6 @@ function Selch = tournament_selection_replacement(chrom,fitv,lambda,k)
         end
         Selch(v,:) =  Tournament((find(max(TempFit) == TempFit)),:);   
     end
+    %TODO remove tempfit list 
 end
 

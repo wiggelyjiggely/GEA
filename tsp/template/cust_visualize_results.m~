@@ -1,0 +1,8 @@
+function cust_visualize_results(best_fitness,mean_fitness)
+    len = size(transpose(Fitness))-1;
+    plot([1:1:len],Fitness(1:len));
+    xlabel("Generation");
+    ylabel("Mean fitness value");
+    hold on;
+    
+end
