@@ -1,0 +1,8 @@
+function W = randomize(A)
+    [~,L] = size(A);
+    RandOrder = randperm(L);
+    NewW = zeros(L);
+    for c=1:L
+       newW(c) = A(RandOrder(c)); 
+    end
+end
