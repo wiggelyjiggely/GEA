@@ -31,6 +31,7 @@ NVAR=size(data,1);
 figure;
 title("Population: " + NIND);
 hold on;
+
 %for jump1= [1,3,5,10]
         %PR_MUT = jump1/100;
         %[fit,min,best] = cust_run(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP);
@@ -38,7 +39,7 @@ hold on;
         %cust_visualize_results(best,fit);
         sparsemean = sparse(fit);
         sizesparse = nnz(sparsemean);
-        plot([1:1:sizesparse],sparsemean(1:sizesparse),'DisplayName',"Mutaion rate: " + num2str(PR_MUT));
+        plot([1:1:sizesparse],sparsemean(1:sizesparse),'DisplayName',"Crossover rate: " + num2str(PR_CROSS));
         xlabel("Generation");
         ylabel("Mean fitness value");
 %end
