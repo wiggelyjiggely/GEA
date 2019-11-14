@@ -1,7 +1,7 @@
 function run_with_param()
 
 NIND=50;		% Number of individuals
-MAXGEN=100;		% Maximum no. of generations
+MAXGEN=1000;		% Maximum no. of generations
 NVAR=26;		% No. of variables
 PRECI=1;		% Precision of variables
 ELITIST=0.95;    % percentage of the elite population

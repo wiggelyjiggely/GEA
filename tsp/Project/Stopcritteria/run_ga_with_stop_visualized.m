@@ -1,4 +1,4 @@
-function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, ELITIST,STOP_PERCENTAGE_INDIVIDUALS, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3)
+function [mean_fits,minimum,best,stop,stop_values] = run_ga_with_stop_visualized(x, y, NIND, MAXGEN, NVAR, ELITIST,STOP_PERCENTAGE_INDIVIDUALS, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -11,12 +11,16 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
 % MAXGEN: maximal number of generations
 % ELITIST: percentage of elite population
 % STOP_PERCENTAGE_INDIVIDUALS: percentage of equal fitness (stop criterium)
-% STOP_GEN_AVERAGE: amount of generations the average fitness does not change
+% STOP_GEN_AVERAGE: amount of generations the average fitness does not 
+% change (stop criterium)
 % STOP_PERCENTAGE_AVERAGE: percentage of change for the average fitness
+% stop criterium)
 % STOP_GEN_BEST: amount of generations the best fitness does not change
-% STOP_PERCENTAGE_BEST: percentage of change for the best fitness
+% (stop criterium)
+% STOP_PERCENTAGE_BEST: percentage of change for the best fitness (stop 
+% criterium)
 % STOP_PERCENTAGE_RATIO: percentage for the ratio of the average and best
-% fitness
+% fitness (stop criterium)
 % PR_CROSS: probability for crossover
 % PR_MUT: probability for mutation
 % CROSSOVER: the crossover operator
@@ -47,6 +51,25 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
         numbAverage = 0;
         % number of generations in a row that the best fitness didn't changed.
         numbBest = 0;
+        % boolean matrix that represents the stop conditions of the GA
+        % meaning Boolean value:
+            % True: The algorithm should stop
+            % False: The algorithm should not stop
+        % meaning rows
+            % stop(1,:): no variation in population
+            % stop(2,:): no improving best
+            % stop(3,:): no improving average
+            % stop(4,:): ratio
+        stop = false(4, MAXGEN);
+        % matrix that contains the values for the stop criteria
+        % meaning rows
+            % stop(1,:): percentage of population
+            % stop(2,:): generations best did not change
+            % stop(3,:): change in best
+            % stop(4,:): generations average did not change
+            % stop(5,:): change in average
+            % stop(6,:): ratio
+        stop_values = zeros(6,MAXGEN);
         % evaluate initial population
         ObjV = tspfun(Chrom,Dist);
         best=zeros(1,MAXGEN);
@@ -66,32 +89,40 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
             %visualizeTSP(x,y,adj2path(Chrom(t,:)), minimum, ah1, gen, best, mean_fits, worst, ah2, ObjV, NIND, ah3);
 
             if (sObjV(stopN)-sObjV(1) <= 1e-15)
-                  break;
+                  stop(1,gen+1) = true;
             end 
             
-            if (best(gen+1)-mean_fits(gen+1) / best(gen+1) <= STOP_PERCENTAGE_RATIO)
-                  break;
+            ratio = (mean_fits(gen+1)-best(gen+1)) / best(gen+1);
+            stop_values(6,gen+1) = ratio;
+            if (ratio<= STOP_PERCENTAGE_RATIO)
+                  stop(4,gen+1) = true;
             end 
-            if (gen > 1)
-            if ((best(gen+1)-best(gen) / best(gen+1)) <=  STOP_PERCENTAGE_BEST)
-                numbBest = numbBest + 1;
-                if (numbBest == STOP_GEN_BEST)
-                    break;
+            if (gen > 0)
+                best_percentage = (best(gen)-best(gen+1)) / best(gen+1);
+                stop_values(3, gen+1) = best_percentage;
+                %if ( best_percentage <=  STOP_PERCENTAGE_BEST)
+                if(best(gen) == best(gen+1))
+                    numbBest = numbBest + 1;
+                    if (numbBest >= STOP_GEN_BEST)
+                        stop(2,gen+1) = true;
+                    end
+                else
+                    numbBest = 0;
                 end
-            else
-                numbBest = 0;
-            end
-            
-            if ((mean_fits(gen+1)-mean_fits(gen) / mean_fits(gen+1)) <=  STOP_PERCENTAGE_AVERAGE)
-                numbAverage = numbAverage + 1;
-                if (numbAverage == STOP_GEN_AVERAGE)
-                    break;
+                stop_values(2, gen+1) = numbBest;
+                
+                average_percentage = (mean_fits(gen)-mean_fits(gen+1)) / mean_fits(gen+1);
+                stop_values(5, gen+1) = average_percentage;
+                if ( average_percentage<=  STOP_PERCENTAGE_AVERAGE)
+                    numbAverage = numbAverage + 1;
+                    if (numbAverage >= STOP_GEN_AVERAGE)
+                        stop(3,gen+1) = true;
+                    end
+                else
+                    numbAverage = 0;
                 end
-            else
-                numbAverage = 0;
-            end
-            
-            
+                stop_values(4, gen+1) = numbAverage;
+            end          
             
         	%assign fitness values to entire population
         	FitnV=ranking(ObjV);
@@ -110,3 +141,4 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
         	gen=gen+1;            
         end
 end
+
