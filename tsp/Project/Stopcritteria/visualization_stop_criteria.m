@@ -17,8 +17,8 @@ CROSSOVER = 'xalt_edges';  % default crossover operator
 
 % load the data sets
 datasetslist = dir('../datasets/');
-datasets=cell( size(datasetslist,1)-2,1);datasets=cell( size(datasetslist,1)-2 ,1);
-for i=1:size(datasets,1);
+datasets=cell( size(datasetslist,1)-2,1);
+for i=1:size(datasets,1)
     datasets{i} = datasetslist(i+2).name;
 end
 
@@ -73,19 +73,17 @@ end
 xlabel("Generation");
 ylabel("Best fitness value");
 subplot(2,2,3)
-E2 = e2(best(1:MAXGEN));
-E3 = e3(best(1:MAXGEN));
+Eval = evaluation(best(1:MAXGEN));
 X = [1:1:MAXGEN];
-plot(X,E2,X,E3,'DisplayName',"Best Fit");
-legend("E2","E3")
+plot(X,Eval(1,:),X,Eval(2,:),X,Eval(3,:),X,Eval(4,:),'DisplayName',"Best Fit");
+legend("No time","Logarithmic time","Rooted time","Time")
 xlabel("Generation");
 ylabel("Mean evaluation value");
 subplot(2,2,4)
-E2 = e2(fit(1:MAXGEN));
-E3 = e3(fit(1:MAXGEN));
+Eval = evaluation(best(1:MAXGEN));
 X = [1:1:MAXGEN];
-plot(X,E2,X,E3,'DisplayName',"Best Fit");
-legend("E2","E3")
+plot(X,Eval(1,:),X,Eval(2,:),X,Eval(3,:),X,Eval(4,:),'DisplayName',"Best Fit");
+legend("No time","Logarithmic time","Rooted time","Time")
 xlabel("Generation");
 ylabel("Best evaluation value");
 hold off;
