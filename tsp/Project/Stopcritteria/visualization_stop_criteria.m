@@ -1,3 +1,5 @@
+clear;clc;
+
 NIND=50;		% Number of individuals
 MAXGEN=1000;		% Maximum no. of generations
 NVAR=26;		% No. of variables
@@ -73,7 +75,7 @@ end
 xlabel("Generation");
 ylabel("Best fitness value");
 subplot(2,2,3)
-Eval = evaluation(best(1:MAXGEN));
+Eval = evaluation(fit(1:MAXGEN));
 X = [1:1:MAXGEN];
 plot(X,Eval(1,:),X,Eval(2,:),X,Eval(3,:),X,Eval(4,:),'DisplayName',"Best Fit");
 legend("No time","Logarithmic time","Rooted time","Time")

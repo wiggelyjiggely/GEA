@@ -7,11 +7,16 @@ function [E] = evaluation(F)
     % Allocate memory for E(T).
     E = zeros(4,T);
 
+    new = F(1,1);
     for t = 1:T-1
-        E(1,t+1) = F(1,t) - F(1,t+1);
-        E(2,t+1) = (F(1,t) - F(1,t+1)) / log(t+1);
-        E(3,t+1) = (F(1,t) - F(1,t+1)) / sqrt(t+1);
-        E(4,t+1) = (F(1,t) - F(1,t+1)) / (t+1);
+        old = new;
+        if F(1,t+1) < new
+            new = F(1,t+1);
+        end
+        E(1,t+1) = (old - new) / old;
+        E(2,t+1) = (old - new) / old / log(t+1);
+        E(3,t+1) = (old - new) / old / sqrt(t+1);
+        E(4,t+1) = (old - new) / old / (t+1);
     end
 end
 
