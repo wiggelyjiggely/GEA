@@ -1,4 +1,4 @@
-function [E] = evaluation(F)
+function [E] = efficiency(F)
 %Calculate the eficiency as the ratio of the solution quality to the 
 % delivered computational effort.
 
@@ -15,8 +15,8 @@ function [E] = evaluation(F)
         end
         E(1,t+1) = (old - new) / old;
         E(2,t+1) = (old - new) / old / log(t+1);
-        E(3,t+1) = (old - new) / old / sqrt(t+1);
-        E(4,t+1) = (old - new) / old / (t+1);
+        E(3,t+1) = (old - new) / old / (t+1);
+        E(4,t+1) = (old - new) / old / (t+1)^2;
     end
 end
 
