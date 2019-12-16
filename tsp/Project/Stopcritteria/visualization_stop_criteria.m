@@ -34,7 +34,7 @@ hold on;
 [fit,min,best,stop,stop_values] = run_ga_with_stop_visualized(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP);
 sparsemean = sparse(fit);
 sizesparse = nnz(sparsemean);
-subplot(2,2,1)
+subplot(5,2,1)
 plot([1:1:sizesparse],sparsemean(1:sizesparse),'DisplayName',"Mean Fit");
 x1 = find(stop(1,:),1,"first");
 if (~isempty(x1))
@@ -54,7 +54,34 @@ if (~isempty(x4))
 end
 xlabel("Generation");
 ylabel("Mean fitness value");
-subplot(2,2,2)
+
+EMean = efficiency(fit(1:MAXGEN));
+X = [1:1:MAXGEN];
+subplot(5,2,3)
+plot(X,EMean(1,:),'DisplayName',"Best Fit");
+legend("Time is not penaltized")
+xlabel("Generation");
+ylabel("Efficiency value of the mean");
+
+subplot(5,2,5)
+plot(X,EMean(2,:),'DisplayName',"Best Fit");
+legend("Time is penaltized is a logarithmic manner")
+xlabel("Generation");
+ylabel("Efficiency value of the mean");
+
+subplot(5,2,7)
+plot(X,EMean(3,:),'DisplayName',"Best Fit");
+legend("Time is penaltized is a square linear manner")
+xlabel("Generation");
+ylabel("Efficiency value of the mean");
+
+subplot(5,2,9)
+plot(X,EMean(4,:),'DisplayName',"Best Fit");
+legend("Time is penaltized in a quadratic manner")
+xlabel("Generation");
+ylabel("Efficiency value of the mean");
+
+subplot(5,2,2)
 plot([1:1:MAXGEN],best(1:MAXGEN),'DisplayName',"Best Fit");
 x1 = find(stop(1,:),1,"first");
 if (~isempty(x1))
@@ -74,18 +101,33 @@ if (~isempty(x4))
 end
 xlabel("Generation");
 ylabel("Best fitness value");
-subplot(2,2,3)
-Eval = evaluation(fit(1:MAXGEN));
+
+
+EBest = efficiency(best(1:MAXGEN));
 X = [1:1:MAXGEN];
-plot(X,Eval(1,:),X,Eval(2,:),X,Eval(3,:),X,Eval(4,:),'DisplayName',"Best Fit");
-legend("No time","Logarithmic time","Rooted time","Time")
+
+subplot(5,2,4)
+plot(X,EBest(1,:),'DisplayName',"Best Fit");
+legend("Time is not penaltized")
 xlabel("Generation");
-ylabel("Mean evaluation value");
-subplot(2,2,4)
-Eval = evaluation(best(1:MAXGEN));
-X = [1:1:MAXGEN];
-plot(X,Eval(1,:),X,Eval(2,:),X,Eval(3,:),X,Eval(4,:),'DisplayName',"Best Fit");
-legend("No time","Logarithmic time","Rooted time","Time")
+ylabel("Efficiency value of the best");
+
+subplot(5,2,6)
+plot(X,EBest(2,:),'DisplayName',"Best Fit");
+legend("Time is penaltized is a logarithmic manner")
 xlabel("Generation");
-ylabel("Best evaluation value");
+ylabel("Efficiency value of the best");
+
+subplot(5,2,8)
+plot(X,EBest(3,:),'DisplayName',"Best Fit");
+legend("Time is penaltized is a linear manner")
+xlabel("Generation");
+ylabel("Efficiency value of the best");
+
+subplot(5,2,10)
+plot(X,EBest(4,:),'DisplayName',"Best Fit");
+legend("Time is penaltized in a quadratic manner")
+xlabel("Generation");
+ylabel("Efficiency value of the best");
+
 hold off;
