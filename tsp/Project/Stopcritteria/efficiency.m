@@ -1,5 +1,5 @@
 function [E] = efficiency(F)
-%Calculate the eficiency as the ratio of the solution quality to the 
+% Calculate the eficiency E as the ratio of the solution quality F to the 
 % delivered computational effort.
 
     % Number of generations T.

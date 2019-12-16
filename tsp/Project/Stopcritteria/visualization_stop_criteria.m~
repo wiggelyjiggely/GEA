@@ -1,7 +1,7 @@
 clear;clc;
 
 NIND=50;		% Number of individuals
-MAXGEN=50000;		% Maximum no. of generations
+MAXGEN=1000;		% Maximum no. of generations
 NVAR=26;		% No. of variables
 PRECI=1;		% Precision of variables
 ELITIST=0.95;    % percentage of the elite population
@@ -36,7 +36,7 @@ hold on;
 sparsemean = sparse(fit);
 sizesparse = nnz(sparsemean);
 subplot(5,2,1)
-plot((1:1:sizesparse),sparsemean(1:sizesparse),'DisplayName',"Mean Fit");
+plot([1:1:sizesparse],sparsemean(1:sizesparse),'DisplayName',"Mean Fit");
 x1 = find(stop(1,:),1,"first");
 if (~isempty(x1))
     xline(x1,'-.',"Stopcriterium 1");
@@ -70,18 +70,16 @@ for iSMean = 1:iSMeanMax
 end
 
 subplot(5,2,5)
-plot(X(1:500),EMean(2,1:500),'DisplayName',"Best Fit");
+plot(X,EMean(2,:),'DisplayName',"Best Fit");
 %legend("Time is penaltized is a logarithmic manner")
 xlabel("Generation");
 ylabel("Efficiency value of the mean");
 for iSMean = 1:iSMeanMax
-    if SMean(2,iSMean) < 500
-        xline(SMean(2,iSMean),'--r',num2str(UMean(iSMean)));
-    end
+    xline(SMean(2,iSMean),'--r',num2str(UMean(iSMean)));
 end
 
 subplot(5,2,7)
-plot(X(1:200),EMean(3,1:200),'DisplayName',"Best Fit");
+plot(X,EMean(3,:),'DisplayName',"Best Fit");
 %legend("Time is penaltized is a square linear manner")
 xlabel("Generation");
 ylabel("Efficiency value of the mean");
@@ -90,7 +88,7 @@ for iSMean = 1:iSMeanMax
 end
 
 subplot(5,2,9)
-plot(X(1:200),EMean(4,1:200),'DisplayName',"Best Fit");
+plot(X,EMean(4,:),'DisplayName',"Best Fit");
 %legend("Time is penaltized in a quadratic manner")
 xlabel("Generation");
 ylabel("Efficiency value of the mean");
@@ -135,14 +133,12 @@ for iSBest = 1:iSBestMax
 end
 
 subplot(5,2,6)
-plot(X(1:500),EBest(2,1:500),'DisplayName',"Best Fit");
+plot(X,EBest(2,1:500),'DisplayName',"Best Fit");
 %legend("Time is penaltized is a logarithmic manner")
 xlabel("Generation");
 ylabel("Efficiency value of the best");
 for iSBest = 1:iSBestMax
-    if SBest(2,iSBest) < 500
-        xline(SBest(2,iSBest),'--r',num2str(UBest(iSBest)));
-    end
+    xline(SBest(2,iSBest),'--r',num2str(UBest(iSBest)));
 end
 
 subplot(5,2,8)
