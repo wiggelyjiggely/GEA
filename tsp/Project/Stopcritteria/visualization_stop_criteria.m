@@ -1,10 +1,13 @@
+% Clear the workspace
 clear;clc;
 
-NIND=50;		% Number of individuals
-MAXGEN=50000;		% Maximum no. of generations
+% Set the parameters
+NIND=250;		% Number of individuals
+MAXGEN=2000;		% Maximum no. of generations
+X=(1:MAXGEN);   % X values for plotting the generations
 NVAR=26;		% No. of variables
 PRECI=1;		% Precision of variables
-ELITIST=0.95;    % percentage of the elite population
+ELITIST=0.99;    % percentage of the elite population
 GGAP=1-ELITIST;		% Generation gap
 STOP_PERCENTAGE=1;    % percentage of equal fitness individuals for stopping
 STOP_GEN_AVERAGE = 10; % amount of generations the average fitness does not change
@@ -18,23 +21,67 @@ LOCALLOOP=1;      % local loop removal
 CROSSOVER = 'xalt_edges';  % default crossover operator
 UMean = [0.01,0.001,0.0001,0.0001];
 UBest = [0.05,0.01, 0.005, 0.001, 0.0005];
+
 % load the data sets
 datasetslist = dir('../datasets/');
 datasets=cell( size(datasetslist,1)-2,1);
 for i=1:size(datasets,1)
     datasets{i} = datasetslist(i+2).name;
 end
-
-% start with first dataset
 data = load(['../datasets/' datasets{11}]);
+
+% Run the experiments 
 x=data(:,1)/max([data(:,1);data(:,2)]);y=data(:,2)/max([data(:,1);data(:,2)]);
 NVAR=size(data,1);
-figure;
-title("Population: " + NIND);
-hold on;
 [fit,min,best,stop,stop_values] = run_ga_with_stop_visualized(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP);
 sparsemean = sparse(fit);
 sizesparse = nnz(sparsemean);
+
+EMean = efficiency(fit(X));     % Efficiency values for the mean fitness values
+SMean = best_stop(EMean,UMean); % The best generations to stop at according to UMean
+[~,iSMeanMax] = size(SMean);    % The amount of stop places
+
+EBest = efficiency(best(X));    % Efficiency values for the best fitness values
+SBest = best_stop(EBest,UBest); % The best generations to stop at according to UBest
+[~,iSBestMax] = size(SBest);    % The amount of stop places
+
+% Visualizing the fitness values of all generations
+figure;
+plot((1:1:sizesparse),sparsemean(1:sizesparse),X,best(1:MAXGEN));
+legend("Best fitness value","Mean fitness value");
+xlabel("Generation");
+ylabel("Fitness values");
+
+% Visualizing the Efficieny values of all generations
+figure;
+subplot(5,1,1)
+plot(X(1:200),sparsemean(1:200),X(1:200),best(1:200));
+legend("Mean fitness value","Best fitness value");
+xlabel("Generation");
+ylabel("Fitness values");
+subplot(5,1,2)
+plot(X(1:200),EMean(1,1:200),X(1:200),EBest(1,1:200));
+legend("Mean","Best");
+xlabel("Generation");
+ylabel({"Efficiency values with";"no time penalty"});
+subplot(5,1,3)
+plot(X(1:200),EMean(2,1:200),X(1:200),EBest(2,1:200));
+legend("Mean","Best");
+xlabel("Generation");
+ylabel({"Efficiency values with";"logarithmic time penalty"});
+subplot(5,1,4)
+plot(X(1:200),EMean(3,1:200),X(1:200),EBest(3,1:200));
+legend("Mean","Best");
+xlabel("Generation");
+ylabel({"Efficiency values with";"linear time penalty"});
+subplot(5,1,5)
+plot(X(1:200),EMean(4,1:200),X(1:200),EBest(4,1:200));
+legend("Mean","Best");
+xlabel("Generation");
+ylabel({"Efficiency values with";"exponential time penalty"});
+
+% Visualizing 
+figure;
 subplot(5,2,1)
 plot((1:1:sizesparse),sparsemean(1:sizesparse),'DisplayName',"Mean Fit");
 x1 = find(stop(1,:),1,"first");
@@ -56,10 +103,7 @@ end
 xlabel("Generation");
 ylabel("Mean fitness value");
 
-EMean = efficiency(fit(1:MAXGEN));
-SMean = best_stop(EMean,UMean);
-[~,iSMeanMax] = size(SMean);
-X = [1:1:MAXGEN];
+
 subplot(5,2,3)
 plot(X,EMean(1,:),'DisplayName',"Best Fit");
 %legend("Time is not penaltized")
@@ -119,11 +163,6 @@ end
 xlabel("Generation");
 ylabel("Best fitness value");
 
-
-EBest = efficiency(best(1:MAXGEN));
-SBest = best_stop(EBest,UBest);
-[~,iSBestMax] = size(SBest);
-X = [1:1:MAXGEN];
 
 subplot(5,2,4)
 plot(X,EBest(1,:),'DisplayName',"Best Fit");
