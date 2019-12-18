@@ -26,7 +26,11 @@ NewChrom=OldChrom;
 
 for r=1:rows
 	if rand<MutOpt
-		NewChrom(r,:) = feval(MUT_F, OldChrom(r,:),1);
+        if MUT_F == "inversion"
+    		NewChrom(r,:) = feval(MUT_F, OldChrom(r,:),1);
+        else
+            NewChrom(r,:) = feval(MUT_F, OldChrom(r,:),2);
+        end
 	end
 end
 
