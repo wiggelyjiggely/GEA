@@ -1,4 +1,4 @@
-function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, ELITIST,STOP_PERCENTAGE_INDIVIDUALS, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3)
+function [mean_fits,minimum,best] = run_once_ex6(x, y, NIND, MAXGEN, NVAR, ELITIST,STOP_PERCENTAGE_INDIVIDUALS, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -37,8 +37,11 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
         % initialize population
         Chrom=zeros(NIND,NVAR);
         for row=1:NIND
-        	Chrom(row,:)=path2adj(randperm(NVAR));
-            %Chrom(row,:)=randperm(NVAR);
+        	if (CROSSOVER == "xalt_edges")
+                Chrom(row,:)=path2adj(randperm(NVAR));
+            else
+                Chrom(row,:)=randperm(NVAR);
+            end
         end
         gen=0;
         % number of individuals of equal fitness needed to stop
@@ -63,8 +66,6 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
                 end
             end
             
-            %visualizeTSP(x,y,adj2path(Chrom(t,:)), minimum, ah1, gen, best, mean_fits, worst, ah2, ObjV, NIND, ah3);
-
             if (sObjV(stopN)-sObjV(1) <= 1e-15)
                   break;
             end 
@@ -98,13 +99,25 @@ function [mean_fits,minimum,best] = run_ga_with_stop(x, y, NIND, MAXGEN, NVAR, E
         	SelCh=select('sus', Chrom, FitnV, GGAP);
         	%recombine individuals (crossover)
             SelCh = recombin(CROSSOVER,SelCh,PR_CROSS);
-            SelCh=mutateTSP('inversion',SelCh,PR_MUT);
+             if (CROSSOVER == "xalt_edges")
+                SelCh=mutateTSP('inversion',SelCh,PR_MUT);
+            else
+                SelCh=mutateTSP('mutate_RSM',SelCh,PR_MUT);
+            end
             %evaluate offspring, call objective function
-        	ObjVSel = tspfun(SelCh,Dist);
+            if (CROSSOVER == "xalt_edges")
+               ObjVSel = tspfun(SelCh,Dist);
+            else
+               ObjVSel = tspfun2(SelCh,Dist);
+            end
             %reinsert offspring into population
         	[Chrom ObjV]=reins(Chrom,SelCh,1,1,ObjV,ObjVSel);
             
-            Chrom = tsp_ImprovePopulation(NIND, NVAR, Chrom,LOCALLOOP,Dist)
+            if (CROSSOVER == "xalt_edges")
+                Chrom = tsp_ImprovePopulation(NIND, NVAR, Chrom,LOCALLOOP,Dist);
+            else
+                Chrom = tsp_improvePopulationPathrep(NIND, NVAR, Chrom,LOCALLOOP,Dist);
+            end
         	%increment generation counter
         	gen=gen+1;            
         end
