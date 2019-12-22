@@ -1,4 +1,4 @@
-function [mean_fits,minimum,best] = run_once_ex6(x, y, NIND, MAXGEN, NVAR, ELITIST,STOP_PERCENTAGE_INDIVIDUALS, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3)
+function [mean_fits,minimum,best] = run_once_ex6(x, y, NIND, MAXGEN, NVAR, ELITIST,STOP_PERCENTAGE_INDIVIDUALS, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, selop,ah1, ah2, ah3)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -96,7 +96,7 @@ function [mean_fits,minimum,best] = run_once_ex6(x, y, NIND, MAXGEN, NVAR, ELITI
         	%assign fitness values to entire population
         	FitnV=ranking(ObjV);
         	%select individuals for breeding
-        	SelCh=select('sus', Chrom, FitnV, GGAP);
+        	SelCh=select(selop, Chrom, FitnV, GGAP);
         	%recombine individuals (crossover)
             SelCh = recombin(CROSSOVER,SelCh,PR_CROSS);
              if (CROSSOVER == "xalt_edges")

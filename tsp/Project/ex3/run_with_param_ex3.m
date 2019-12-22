@@ -12,10 +12,10 @@ STOP_PERCENTAGE_AVERAGE = 0.01; % percentage of change for the average fitness
 STOP_GEN_BEST = 5; % amount of generations the best fitness does not change
 STOP_PERCENTAGE_BEST = 0.01; % percentage of change for the best fitness
 STOP_PERCENTAGE_RATIO = 0.01; % percentage for the ratio of the average and best
-PR_CROSS=.5;     % probability of crossover
-PR_MUT=.5;       % probability of mutation
+PR_CROSS=.95;     % probability of crossover
+PR_MUT=.05;       % probability of mutation
 LOCALLOOP=0;      % local loop removal
-CROSSOVER = 'xalt_edges';  % default crossover operator
+CROSSOVER = 'Ordered_crossover';  % default crossover operator
 
 % load the data sets
 datasetslist = dir('datasets/');

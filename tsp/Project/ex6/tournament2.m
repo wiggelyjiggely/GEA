@@ -1,4 +1,4 @@
-% This function performs selection tournament.
+% This function performs selection tournament without replacement.
 %
 % Syntax:  NewChrIx = sus(FitnV, Nsel)
 %
@@ -13,12 +13,8 @@
 %                The new population, ready for mating, can be obtained
 %                by calculating OldChrom(NewChrIx,:).
 
-% Author:     Hartmut Pohlheim (Carlos Fonseca)
-% History:    12.12.93     file created
-%             22.02.94     clean up, comments
 
-
-function NewChrIx = tournament(FitnV,Nsel);
+function NewChrIx = tournament2(FitnV,Nsel);
 % tournament size
     k = 2;
 % Identify the population size (Nind)
@@ -36,13 +32,7 @@ function NewChrIx = tournament(FitnV,Nsel);
             Indexes(c) = Rand(1,c);
         end
         Ind = find(max(TempFit) == TempFit);
-        NewChrIx(i) = Indexes(Ind);    
-        Indexes
-        ind
-        listInd(Indexes(Ind)) = [];
-        Nind = Nind-1;
-        if (Nind < Nsel) Nsel = Nsel - 1; end
-        if (Nind < k) k = k - 1; end
+        NewChrIx(i,:) = Indexes(Ind(1,1));    
     end
     
 % Shuffle new population
@@ -51,3 +41,4 @@ function NewChrIx = tournament(FitnV,Nsel);
 
 
 % End of function
+

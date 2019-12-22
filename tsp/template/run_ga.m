@@ -41,11 +41,11 @@ function run_ga(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR
         % number of individuals of equal fitness needed to stop
         stopN=ceil(STOP_PERCENTAGE*NIND);
         % evaluate initial population
-        ObjV = tspfun(Chrom,Dist);
+        ObjV = tspfun2(Chrom,Dist);
         best=zeros(1,MAXGEN);
         % generational loop
         while gen<MAXGEN
-            sObjV=sort(ObjV);
+            sObjV=sort(ObjV)
           	best(gen+1)=min(ObjV);
         	minimum=best(gen+1);
             mean_fits(gen+1)=mean(ObjV);
@@ -75,7 +75,7 @@ function run_ga(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR
                 SelCh=mutateTSP('mutate_RSM',SelCh,PR_MUT);
             end
             %evaluate offspring, call objective function
-        	ObjVSel = tspfun(SelCh,Dist);
+        	ObjVSel = tspfun2(SelCh,Dist);
             %reinsert offspring into population
         	[Chrom ObjV]=reins(Chrom,SelCh,1,1,ObjV,ObjVSel);
              if (CROSSOVER == "xalt_edges")
