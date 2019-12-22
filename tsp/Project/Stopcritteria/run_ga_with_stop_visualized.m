@@ -59,16 +59,16 @@ function [mean_fits,minimum,best,stop,stop_values] = run_ga_with_stop_visualized
             % stop(1,:): no variation in population
             % stop(2,:): no improving best
             % stop(3,:): no improving average
-            % stop(4,:): ratio
+            % stop(4,:): percentage same
         stop = false(4, MAXGEN);
         % matrix that contains the values for the stop criteria
         % meaning rows
-            % stop(1,:): percentage of population
-            % stop(2,:): generations best did not change
-            % stop(3,:): change in best
-            % stop(4,:): generations average did not change
-            % stop(5,:): change in average
-            % stop(6,:): ratio
+            % stop_values(1,:): percentage of population
+            % stop_values(2,:): generations best did not change
+            % stop_values(3,:): change in best
+            % stop_values(4,:): generations average did not change
+            % stop_values(5,:): change in average
+            % stop_values(6,:): percantage same
         stop_values = zeros(6,MAXGEN);
         % evaluate initial population
         ObjV = tspfun(Chrom,Dist);
@@ -92,11 +92,23 @@ function [mean_fits,minimum,best,stop,stop_values] = run_ga_with_stop_visualized
                   stop(1,gen+1) = true;
             end 
             
-            ratio = (mean_fits(gen+1)-best(gen+1)) / best(gen+1);
-            stop_values(6,gen+1) = ratio;
-            if (ratio<= STOP_PERCENTAGE_RATIO)
-                  stop(4,gen+1) = true;
+            %ratio = (mean_fits(gen+1)-best(gen+1)) / best(gen+1);
+            %stop_values(6,gen+1) = ratio;
+            %if (ratio<= STOP_PERCENTAGE_RATIO)
+            %      stop(4,gen+1) = true;
+            %end 
+            
+            stopnumb = NIND * STOP_PERCENTAGE_RATIO;
+            for per=2:NIND
+                if (sObjV(1)-sObjV(per) ~= 0)
+                    if stopnumb < per 
+                        stop(4,gen+1) = true;
+                    end
+                    stop_values(6,gen+1) = per - 1;
+                    break;
+                end
             end 
+            
             if (gen > 0)
                 best_percentage = (best(gen)-best(gen+1)) / best(gen+1);
                 stop_values(3, gen+1) = best_percentage;
