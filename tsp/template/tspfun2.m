@@ -4,7 +4,7 @@ function ObjVal = tspfun2(Phen, Dist);
     for i = 1 : size(Phen)
         adjrep(i,:) = path2adj(Phen(i,:));
     end
-	ObjVal=Dist(Phen(:,1),1);
-	for t=2:size(Phen,2)
-    	ObjVal=ObjVal+Dist(Phen(:,t),t);
+	ObjVal=Dist(adjrep(:,1),1);
+	for t=2:size(adjrep,2)
+    	ObjVal=ObjVal+Dist(adjrep(:,t),t);
 	end
