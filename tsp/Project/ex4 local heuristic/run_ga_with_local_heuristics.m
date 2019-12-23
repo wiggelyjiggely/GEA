@@ -1,4 +1,4 @@
-function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAXGEN, NVAR, ELITIST, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3)
+function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAXGEN, NVAR, Kc, Km, Ke, ah1, ah2, ah3)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -7,6 +7,7 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
 %
 % x, y: coordinates of the cities
 % NIND: number of individuals
+% NVAR: number of cities
 % MAXGEN: maximal number of generations
 % ELITIST: percentage of elite population
 % fitness (stop criterium)
@@ -16,8 +17,6 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
 % calculate distance matrix between each pair of cities
 % ah1, ah2, ah3: axes handles to visualise tsp
     
-    % Generation gap 
-    GGAP = 1 - ELITIST;
     % Generation
     gen=0;
     % number of individuals of equal fitness needed to stop
@@ -62,23 +61,45 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
                 break;
             end
         end
-            
-        %visualizeTSP(x,y,adj2path(Chrom(t,:)), minimum, ah1, gen, best, mean_fits, worst, ah2, ObjV, NIND, ah3);
-            
-           
-        %select individuals for breeding
+                    
+        % Create the selection pool
+        Parents = zeros(NIND,NVAR);
+        ParentsObjV = zeros(NIND,1);
+        Children = zeros(NIND,NVAR);
+        ChildrenObjV = zeros(NIND,1);
         
-            SelCh=select('sus', Chrom, FitnV, GGAP);
-            %recombine individuals (crossover)
-            SelCh = recombin(CROSSOVER,SelCh,PR_CROSS);
-            SelCh=mutateTSP('inversion',SelCh,PR_MUT);
-            %evaluate offspring, call objective function
-            ObjVSel = tspfun(SelCh,Dist);
-            %reinsert offspring into population
-            [Chrom ObjV]=reins(Chrom,SelCh,1,1,ObjV,ObjVSel);
-            Chrom = tsp_ImprovePopulation(NIND, NVAR, Chrom,LOCALLOOP,Dist);
-    
-        %increment generation counter
+        % For each chromosome in the population 
+        for i = 1 : NIND
+            % Do crossover with rate Pc:
+            %   Pc = Kc * (f_max−f_chrom)/(f_max−f_gem)    f>f_gem
+            %   Pc = Kc                                    f<f_gem 
+            
+            % If after crossover a better solution is not found,
+            % mutate the parent with mutation rate Pm:
+            %   Pm = 0.5 * min(distance_LSHGA) / 2N
+            
+            % Iff not mutated: add parent and child to selesction pool.
+            % Else: Add mutation and random new chromosome to pool.
+            
+        end
+        
+        % The reservation rate Pe
+        SquaredMean = mean(ObjV.^2);
+        Pe = Ke * (SquaredMean-mean_fits(gen+1)^2) / (best(gen+1)^2-mean_fits(gen+1)^2);
+       
+        % Select parents
+        AmountOfParantsToSelect = Pe * NVAR;
+        [SelectedParents,SelectedParentsObjV] = binary_tournament_selection_LSHGA(Parents,ParentsObjV,AmountOfParantsToSelect);
+        
+        % Select children
+        AmountOfChildrenToSelect = NVAR - AmountOfParantsToSelect;
+        [SelectedChildren,SelectedChildrenObjV] = binary_tournament_selection_LSHGA(Children,ChildrenObjV,AmountOfChildrenToSelect);
+        
+        % Create the new population
+        Chrom = [SelectedParents;SelectedChildren];
+        ObjV = [SelectedParentsObjV;SelectedChildrenObjV];
+        
+        % Increment generation counter
         gen=gen+1;            
     end
 end
