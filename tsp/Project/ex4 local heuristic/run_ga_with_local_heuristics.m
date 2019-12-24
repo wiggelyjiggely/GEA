@@ -70,22 +70,55 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
         
         % For each chromosome in the population 
         for i = 1 : NIND
-            % Do crossover with rate Pc:
-            %   Pc = Kc * (f_max−f_chrom)/(f_max−f_gem)    f>f_gem
-            %   Pc = Kc                                    f<f_gem 
+            % Crossoverrate Pc
+            if ObjV(f) < mean_fits(1,gen+1) %f<f_gem
+                Pc = Kc;    
+            else %f > f_gem
+                Pc = Kc * (best(1,gen+1)-ObjV(i))/(best(1,gen+1)-mean_fits(1,gen+1));
+            end
             
-            % If after crossover a better solution is not found,
-            % mutate the parent with mutation rate Pm:
-            %   Pm = 0.5 * min(distance_LSHGA) / 2N
-            
-            % Iff not mutated: add parent and child to selesction pool.
-            % Else: Add mutation and random new chromosome to pool.
-            
+            if rand() < Pc % Do crossover
+                [Child,ChildDistance] = crossover_LSHGA(Dist,Chrom(i,:),Objv(i,1));
+                
+                % If after crossover a better solution is not found,
+                if ChildDistance == Objv(i,1)
+                    % Chrom without Chrom(i,:)
+                    RestChrom = Chrom;
+                    RestChrom(i,:) = [];
+                    % Mutation rate Pm
+                    Pm = Km * min_distance_LSHGA(Chrom(i,:),RestChrom) / (2 * NVAR);
+                    
+                    if rand() < Pm
+                    % Mutate the parent with mutation rate Pm
+                    [MutatedParent,MutatedDistance] = mutation_LSHGA(Dist,Chrom(i,:),Objv(i,1));
+                    % Add parent to the Parents pool
+                    Parents(i,:) = Chrom(i,:);
+                    ParentsObjV(i,1) = Objv(i,1);
+                    % Add a child to the Children pool
+                    Children(i,:) = MutatedParent;
+                    ChildrenObjV(i,1) = MutatedDistance;
+                    end
+                else
+                    % Add parent to the Parents pool
+                    Parents(i,:) = Chrom(i,:);
+                    ParentsObjV(i,1) = Objv(i,1);
+                    % Add a child to the Children pool
+                    Children(i,:) = Child;
+                    ChildrenObjV(i,1) = ChildDistance;
+                end
+            else % Don't do crossover
+                % Add parent to the Parents pool
+                Parents(i,:) = Chrom(i,:);
+                ParentsObjV(i,1) = Objv(i,1);
+                % Add a random new child to the Children pool
+                Children(i,:) = randperm(NVAR);
+                ChildrenObjV(i,1) = tspfun2(Children(i,:),Dist);
+            end
         end
         
         % The reservation rate Pe
         SquaredMean = mean(ObjV.^2);
-        Pe = Ke * (SquaredMean-mean_fits(gen+1)^2) / (best(gen+1)^2-mean_fits(gen+1)^2);
+        Pe = Ke * (SquaredMean-mean_fits(1,gen+1)^2) / (best(1,gen+1)^2-mean_fits(1,gen+1)^2);
        
         % Select parents
         AmountOfParantsToSelect = Pe * NVAR;
