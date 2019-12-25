@@ -32,7 +32,7 @@ function [Child,Distance] = crossover_LSHGA(Dist,Parent,Distance)
         end
 
         %% STEP3: Rearange the tour
-        Child = [ParentX(1,1:s2ji-1), ParentX(1,s2ji+1,cities),ParentX(1,s2ji)];
+        Child = [ParentX(1,1:s2ji-1), ParentX(1,s2ji+1:cities),ParentX(1,s2ji)];
 
         %% STEP4: Evaluation step
         DeltaDistance = Dist(1,s2ji)+Dist(s2ji-1,s2ji+1)+Dist(s2ji,cities)-Dist(1,cities)-Dist(s2ji-1,s2ji)-Dist(s2ji,s2ji+1);

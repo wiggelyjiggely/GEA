@@ -9,13 +9,21 @@ function [SelectedPopulation,SelectedObjV] = binary_tournament_selection_LSHGA(P
     % Size of population and amount of cities.
     [PopSize,Cities] = size(Population);
     
+    if PopSize == ATS
+        SelectedPopulation = Population;
+        SelectedObjV = ObjV;
+        return;
+    end
+    
     % Allocate memory for SelectedPopulation and for SelectedObjV.
     SelectedPopulation = zeros(ATS,Cities);
     SelectedObjV = zeros(ATS,1);
     
     % Use 2k Tournament selection to reduce the population in half
     for i = 1:ATS
+        PopSize;
         sft = randi(PopSize,1,2);
+        [ObjV(sft(1)),ObjV(sft(2))]
         if ObjV(sft(1)) < ObjV(sft(2))
             SelectedPopulation(i,:) = Population(sft(1),:);
             SelectedObjV(i,1) = ObjV(sft(1),1);

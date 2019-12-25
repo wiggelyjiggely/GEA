@@ -1,4 +1,4 @@
-function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAXGEN, NVAR, Kc, Km, Ke, ah1, ah2, ah3)
+function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAXGEN, NVAR, Kc, Km, Ke)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -15,19 +15,16 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
 % PR_MUT: probability for mutation
 % CROSSOVER: the crossover operator
 % calculate distance matrix between each pair of cities
-% ah1, ah2, ah3: axes handles to visualise tsp
     
     % Generation
-    gen=0;
-    % number of individuals of equal fitness needed to stop
-    stopN=ceil(STOP_PERCENTAGE_INDIVIDUALS*NIND);
-    
+    gen=1;
+        
     % Best fitness value of all generations.
     best=zeros(1,MAXGEN);
     % Mean fitness values of all generations.
-    mean_fits = zeros(1,MAXGEN+1);
+    mean_fits = zeros(1,MAXGEN);
     % Worst fitness value of all generations.
-    worst = zeros(1,MAXGEN+1);
+    worst = zeros(1,MAXGEN);
     
     % Distance between cities
     Dist = zeros(NVAR,NVAR);
@@ -44,18 +41,20 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
         %Chrom(row,:)=path2adj(randperm(NVAR));  % Adjacency representation
     end
     % Evaluate initial population
-    ObjV = tspfun2(Chrom,Dist);    
+    ObjV = tspfun2(Chrom,Dist);  
         
     % Generational loop
     while gen<MAXGEN
         
         % Generation statistics
-        best(gen+1)=min(ObjV); % The best chromosome 
-        mean_fits(gen+1)=mean(ObjV); % Mean fitness value
-        worst(gen+1)=max(ObjV); % Worst fitness value
+        best(gen)=min(ObjV); % The best chromosome 
+        mean_fits(gen)=mean(ObjV); % Mean fitness value
+        worst(gen)=max(ObjV); % Worst fitness value
+        fmax = fitness_LSHGA(best(gen),NVAR);
+        fmean = fitness_LSHGA(mean_fits(gen),NVAR);
         
         % Louche shit in hun code
-        minimum=best(gen+1);
+        minimum=best(gen);
         for t=1:size(ObjV,1)
             if (ObjV(t)==minimum)
                 break;
@@ -71,22 +70,22 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
         % For each chromosome in the population 
         for i = 1 : NIND
             % Crossoverrate Pc
-            if ObjV(f) < mean_fits(1,gen+1) %f<f_gem
-                Pc = Kc;    
+            if fitness_LSHGA(ObjV(i),NVAR) < fmean % f < f_gem
+                Pc = Kc;
             else %f > f_gem
-                Pc = Kc * (best(1,gen+1)-ObjV(i))/(best(1,gen+1)-mean_fits(1,gen+1));
+                Pc = Kc * (fmax-fitness_LSHGA(ObjV(i),NVAR))/(fmax-fmean);
             end
             
             if rand() < Pc % Do crossover
-                [Child,ChildDistance] = crossover_LSHGA(Dist,Chrom(i,:),Objv(i,1));
+                [Child,ChildDistance] = crossover_LSHGA(Dist,Chrom(i,:),ObjV(i,1));
                 
                 % If after crossover a better solution is not found,
-                if ChildDistance == Objv(i,1)
+                if ChildDistance == ObjV(i,1)
                     % Chrom without Chrom(i,:)
                     RestChrom = Chrom;
                     RestChrom(i,:) = [];
                     % Mutation rate Pm
-                    Pm = Km * min_distance_LSHGA(Chrom(i,:),RestChrom) / (2 * NVAR);
+                    Pm = Km * min_distance_LSHGA(Chrom(i,:),RestChrom) / (NVAR);
                     
                     if rand() < Pm
                     % Mutate the parent with mutation rate Pm
@@ -101,7 +100,7 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
                 else
                     % Add parent to the Parents pool
                     Parents(i,:) = Chrom(i,:);
-                    ParentsObjV(i,1) = Objv(i,1);
+                    ParentsObjV(i,1) = ObjV(i,1);
                     % Add a child to the Children pool
                     Children(i,:) = Child;
                     ChildrenObjV(i,1) = ChildDistance;
@@ -109,7 +108,7 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
             else % Don't do crossover
                 % Add parent to the Parents pool
                 Parents(i,:) = Chrom(i,:);
-                ParentsObjV(i,1) = Objv(i,1);
+                ParentsObjV(i,1) = ObjV(i,1);
                 % Add a random new child to the Children pool
                 Children(i,:) = randperm(NVAR);
                 ChildrenObjV(i,1) = tspfun2(Children(i,:),Dist);
@@ -117,15 +116,15 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
         end
         
         % The reservation rate Pe
-        SquaredMean = mean(ObjV.^2);
-        Pe = Ke * (SquaredMean-mean_fits(1,gen+1)^2) / (best(1,gen+1)^2-mean_fits(1,gen+1)^2);
+        SquaredMean = mean(fitness_LSHGA(ObjV,NVAR).^2);        
+        Pe = Ke * (SquaredMean - (fmean^2)) / ((fmax^2) - (fmean^2));
        
         % Select parents
-        AmountOfParantsToSelect = Pe * NVAR;
+        AmountOfParantsToSelect = ceil(Pe * NIND);
         [SelectedParents,SelectedParentsObjV] = binary_tournament_selection_LSHGA(Parents,ParentsObjV,AmountOfParantsToSelect);
         
         % Select children
-        AmountOfChildrenToSelect = NVAR - AmountOfParantsToSelect;
+        AmountOfChildrenToSelect = NIND - AmountOfParantsToSelect;
         [SelectedChildren,SelectedChildrenObjV] = binary_tournament_selection_LSHGA(Children,ChildrenObjV,AmountOfChildrenToSelect);
         
         % Create the new population
@@ -133,7 +132,7 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
         ObjV = [SelectedParentsObjV;SelectedChildrenObjV];
         
         % Increment generation counter
-        gen=gen+1;            
+        gen=gen+1;          
     end
 end
 
