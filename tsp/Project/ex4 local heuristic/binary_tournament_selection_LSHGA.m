@@ -21,9 +21,7 @@ function [SelectedPopulation,SelectedObjV] = binary_tournament_selection_LSHGA(P
     
     % Use 2k Tournament selection to reduce the population in half
     for i = 1:ATS
-        PopSize;
         sft = randi(PopSize,1,2);
-        [ObjV(sft(1)),ObjV(sft(2))]
         if ObjV(sft(1)) < ObjV(sft(2))
             SelectedPopulation(i,:) = Population(sft(1),:);
             SelectedObjV(i,1) = ObjV(sft(1),1);

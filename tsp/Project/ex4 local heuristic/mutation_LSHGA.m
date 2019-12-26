@@ -18,7 +18,7 @@ function [Mutation,Distance] = mutation_LSHGA(Dist,Chromosome,Distance)
 
     % The difference in distance between the old chromosome and the
     % mutation
-    deltaDistance = Dist(indices(2),cities) + Dist(indices(2)+1,1) - Dist(indices(2),indices(2)+1) - Dist(cities,1);
+    deltaDistance = Dist(Chromosome(indices(2)),Chromosome(cities)) + Dist(Chromosome(indices(2)+1),Chromosome(1)) - Dist(Chromosome(indices(2)),Chromosome(indices(2)+1)) - Dist(Chromosome(cities),Chromosome(1));
     % The distance of the mutation
     Distance = Distance + deltaDistance;
 end

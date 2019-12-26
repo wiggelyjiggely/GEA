@@ -44,7 +44,7 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
     ObjV = tspfun2(Chrom,Dist);  
         
     % Generational loop
-    while gen<MAXGEN
+    while gen<MAXGEN+1
         
         % Generation statistics
         best(gen)=min(ObjV); % The best chromosome 
@@ -88,14 +88,19 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
                     Pm = Km * min_distance_LSHGA(Chrom(i,:),RestChrom) / (NVAR);
                     
                     if rand() < Pm
-                    % Mutate the parent with mutation rate Pm
-                    [MutatedParent,MutatedDistance] = mutation_LSHGA(Dist,Chrom(i,:),Objv(i,1));
-                    % Add parent to the Parents pool
-                    Parents(i,:) = Chrom(i,:);
-                    ParentsObjV(i,1) = Objv(i,1);
-                    % Add a child to the Children pool
-                    Children(i,:) = MutatedParent;
-                    ChildrenObjV(i,1) = MutatedDistance;
+                        % Mutate the parent with mutation rate Pm
+                        [MutatedParent,MutatedDistance] = mutation_LSHGA(Dist,Chrom(i,:),ObjV(i,1));
+                        % Add parent to the Parents pool
+                        Parents(i,:) = Chrom(i,:);
+                        ParentsObjV(i,1) = ObjV(i,1);
+                        % Add a child to the Children pool
+                        Children(i,:) = MutatedParent;
+                        ChildrenObjV(i,1) = MutatedDistance;
+                    else
+                        Parents(i,:) = randperm(NVAR);
+                        ParentsObjV(i,1) = tspfun2(Parents(i,:),Dist);
+                        Children(i,:) = Chrom(i,:);
+                        ChildrenObjV(i,1) = ObjV(i,1);
                     end
                 else
                     % Add parent to the Parents pool
@@ -107,32 +112,41 @@ function [mean_fits,minimum,best] = run_ga_with_local_heuristics(x, y, NIND, MAX
                 end
             else % Don't do crossover
                 % Add parent to the Parents pool
-                Parents(i,:) = Chrom(i,:);
-                ParentsObjV(i,1) = ObjV(i,1);
+                % Parents(i,:) = Chrom(i,:);
+                % ParentsObjV(i,1) = ObjV(i,1);
                 % Add a random new child to the Children pool
-                Children(i,:) = randperm(NVAR);
-                ChildrenObjV(i,1) = tspfun2(Children(i,:),Dist);
+                % Children(i,:) = randperm(NVAR);
+                % ChildrenObjV(i,1) = tspfun2(Children(i,:),Dist);
+                Parents(i,:) = randperm(NVAR);
+                ParentsObjV(i,1) = tspfun2(Parents(i,:),Dist);
+                Children(i,:) = Chrom(i,:);
+                ChildrenObjV(i,1) = ObjV(i,1);
             end
         end
         
         % The reservation rate Pe
-        SquaredMean = mean(fitness_LSHGA(ObjV,NVAR).^2);        
+        SquaredMean = mean(fitness_LSHGA(ObjV,NVAR).^2);     
         Pe = Ke * (SquaredMean - (fmean^2)) / ((fmax^2) - (fmean^2));
        
         % Select parents
         AmountOfParantsToSelect = ceil(Pe * NIND);
         [SelectedParents,SelectedParentsObjV] = binary_tournament_selection_LSHGA(Parents,ParentsObjV,AmountOfParantsToSelect);
+        %ind = sus(ParentsObjV,AmountOfParantsToSelect);
+        %SelectedParents(:,:) = Parents(ind,:);
+        %SelectedParentsObjV = ParentsObjV(ind);
         
         % Select children
         AmountOfChildrenToSelect = NIND - AmountOfParantsToSelect;
         [SelectedChildren,SelectedChildrenObjV] = binary_tournament_selection_LSHGA(Children,ChildrenObjV,AmountOfChildrenToSelect);
+        %ind = sus(ChildrenObjV,AmountOfChildrenToSelect);
+        %SelectedChildren(:,:) = Children(ind,:);
+        %SelectedChildrenObjV = ChildrenObjV(ind);
         
         % Create the new population
         Chrom = [SelectedParents;SelectedChildren];
         ObjV = [SelectedParentsObjV;SelectedChildrenObjV];
-        
         % Increment generation counter
-        gen=gen+1;          
+        gen=gen+1          
     end
 end
 
