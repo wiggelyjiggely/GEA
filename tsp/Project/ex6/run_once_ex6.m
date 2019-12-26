@@ -51,12 +51,17 @@ function [mean_fits,minimum,best] = run_once_ex6(x, y, NIND, MAXGEN, NVAR, ELITI
         % number of generations in a row that the best fitness didn't changed.
         numbBest = 0;
         % evaluate initial population
+        if (CROSSOVER == "xalt_edges")
+            ObjV = tspfun(Chrom,Dist);
+        else
+            ObjV = tspfun2(Chrom,Dist);
+        end
         ObjV = tspfun(Chrom,Dist);
         best=zeros(1,MAXGEN);
         % generational loop
         while gen<MAXGEN
             sObjV=sort(ObjV);
-          	best(gen+1)=min(ObjV);
+          	best(gen+1)=min(ObjV)
         	minimum=best(gen+1);
             mean_fits(gen+1)=mean(ObjV);
             worst(gen+1)=max(ObjV);
