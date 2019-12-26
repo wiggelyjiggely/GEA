@@ -1,4 +1,4 @@
-function [mean_fits,best] = run_ga_with_local_heuristics_and_stop(x, y, NIND, MAXGEN, NVAR, Kc, Km, Ke,TNIB)
+function [meanToReturn,bestToReturn] = run_ga_with_local_heuristics_and_stop(x, y, NIND, MAXGEN, NVAR, Kc, Km, Ke,TNIB)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -43,6 +43,7 @@ function [mean_fits,best] = run_ga_with_local_heuristics_and_stop(x, y, NIND, MA
     
     % Stop parameters
     GenNotImprovedBest = 0;
+    GenNotImprovedMean = 0;
         
     % Generational loop
     while gen<MAXGEN+1
@@ -53,16 +54,28 @@ function [mean_fits,best] = run_ga_with_local_heuristics_and_stop(x, y, NIND, MA
         fmax = fitness_LSHGA(best(gen),NVAR);
         fmean = fitness_LSHGA(mean_fits(gen),NVAR);
         
+        % Stop criteria
+        if gen == 1
+            lowestmean = mean_fits(gen);
+        end
         if gen > 1
-            if best(gen) == best(gen-1)
+            if mean_fits(gen) >= lowestmean
+                GenNotImprovedMean = GenNotImprovedMean + 1;
+            else
+                GenNotImprovedMean = 0;
+                lowestmean = mean_fits(gen);
+            end
+            if best(gen) >= best(gen-1)
                 GenNotImprovedBest = GenNotImprovedBest + 1;
-                if GenNotImprovedBest == TNIB
-                    best = best(1:gen,1);
-                    mean_fits = mean_fits(1:gen,1);
-                    return
-                end
             else
                 GenNotImprovedBest = 0;
+            end
+            if GenNotImprovedBest >= TNIB && GenNotImprovedMean >= TNIB
+                %meanToReturn = zeros(gen,1);
+                meanToReturn(1,1:gen) = mean_fits(1,1:gen);
+                %bestToReturn = zeros(gen,1);
+                bestToReturn(1,1:gen) = best(1,1:gen);
+                return
             end
         end
             
@@ -159,6 +172,9 @@ function [mean_fits,best] = run_ga_with_local_heuristics_and_stop(x, y, NIND, MA
         Chrom = [SelectedParents;SelectedChildren];
         ObjV = [SelectedParentsObjV;SelectedChildrenObjV];
         % Increment generation counter
-        gen=gen+1          
+        gen=gen+1;         
     end
+    bestToReturn = best;
+    meanToReturn = mean_fits;
+    
 end

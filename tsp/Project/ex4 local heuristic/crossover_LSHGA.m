@@ -40,7 +40,6 @@ function [Child,Distance] = crossover_LSHGA(Dist,Parent,Distance)
         if DeltaDistance < 0
             Distance = Distance + DeltaDistance;
             if Distance == 0
-            wtf = 0
             end
             return; 
         end
