@@ -41,7 +41,7 @@ function run_ga(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR
         % number of individuals of equal fitness needed to stop
         stopN=ceil(STOP_PERCENTAGE*NIND);
         % evaluate initial population
-        ObjV = tspfun2(Chrom,Dist);
+        ObjV = tspfun(Chrom,Dist);
         best=zeros(1,MAXGEN);
         % generational loop
         while gen<MAXGEN
@@ -62,11 +62,15 @@ function run_ga(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR
             end
             if (sObjV(stopN)-sObjV(1) <= 1e-15)
                   break;
-            end          
+            end   
+       
+
+
+
         	%assign fitness values to entire population
         	FitnV=ranking(ObjV);
         	%select individuals for breeding
-        	SelCh=select('sus', Chrom, FitnV, GGAP);
+        	SelCh=select('tournament', Chrom, FitnV, GGAP);
         	%recombine individuals (crossover)
             SelCh = recombin(CROSSOVER,SelCh,PR_CROSS);
             if (CROSSOVER == "xalt_edges")
@@ -75,7 +79,11 @@ function run_ga(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR
                 SelCh=mutateTSP('mutate_RSM',SelCh,PR_MUT);
             end
             %evaluate offspring, call objective function
-        	ObjVSel = tspfun2(SelCh,Dist);
+        	if (CROSSOVER == "xalt_edges")
+                ObjVSel = tspfun(SelCh,Dist);
+            else
+                ObjVSel = tspfun2(SelCh,Dist);
+            end
             %reinsert offspring into population
         	[Chrom ObjV]=reins(Chrom,SelCh,1,1,ObjV,ObjVSel);
              if (CROSSOVER == "xalt_edges")

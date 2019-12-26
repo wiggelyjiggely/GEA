@@ -178,6 +178,15 @@ set(fh,'Visible','on');
         set(crossslider,'Visible','off');
         set(elitslider,'Visible','off');
         run_ga(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, ah1, ah2, ah3);
+        
+        %STOP_PERCENTAGE=1;    % percentage of equal fitness individuals for stopping
+        %STOP_GEN_AVERAGE = 5; % amount of generations the average fitness does not change
+        %STOP_PERCENTAGE_AVERAGE = 0.01; % percentage of change for the average fitness
+        %STOP_GEN_BEST = 5; % amount of generations the best fitness does not change
+        %STOP_PERCENTAGE_BEST = 0.01; % percentage of change for the best fitness
+        %STOP_PERCENTAGE_RATIO = 0.01; % percentage for the ratio of the average and best
+        %run_once_ex6(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, STOP_GEN_AVERAGE, STOP_PERCENTAGE_AVERAGE, STOP_GEN_BEST, STOP_PERCENTAGE_BEST, STOP_PERCENTAGE_RATIO, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, 'srs');
+        
         end_run();
     end
     function inputbutton_Callback(hObject,eventdata)
