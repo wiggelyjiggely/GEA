@@ -2,7 +2,7 @@
 clear;clc;
 
 % Set the parameters
-NIND=100;		% Number of individuals
+NIND=50;		% Number of individuals
 MAXGEN=2000;		% Maximum no. of generations
 X=(1:MAXGEN);   % X values for plotting the generations
 PRECI=1;		% Precision of variables
