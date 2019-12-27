@@ -32,3 +32,5 @@ xql662 = load(['../ex5 benchmarks/benchmarks/' datasets{5}]);
 xxql662=xql662(:,1);%/max([xql662(:,1);xql662(:,2)]);
 yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
+
+[fit,min,best] = run_ga_custom_wlm(x, y, 50, MAXGEN, NVAR, 0.4, STOP_PERCENTAGE, 0.2, 0.6, 'xalt_edges', LOCALLOOP,'srs');
