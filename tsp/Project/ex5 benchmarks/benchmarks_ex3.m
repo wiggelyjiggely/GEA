@@ -35,10 +35,10 @@ Nxql662=size(xql662,1);
 
 % Set the parameters for lshga
 MAXGEN=10000;	
-PROC = 0.7;         
+PROC = 0.95;         
 LOOP = 0;
 FRACPOP = 0.5;
-ELIT = 0.4;
+ELIT = 0.3;
 CROSSR = 0.6;
 PR = 0.5;
 
@@ -52,7 +52,7 @@ PR = 0.5;
 
 disp("xqf131")
 startxqf131 = tic;
-[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, round(Nxqf131*FRACPOP), MAXGEN, Nxqf131, ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, round(Nxqf131*FRACPOP), MAXGEN, Nxqf131, ELIT, PROC, CROSSR, PR, 'Ordered_crossover', LOOP,'sus');
 t_xqf131 = toc(startxqf131);
 for i = 1 : size(best_xqf131,2)
    if (best_xqf131(1,i) == 0)
@@ -66,7 +66,7 @@ disp("Time: " + t_xqf131 + " Tours: " + best_xqf131 + " at generation: " + gen_x
 
 disp("bcl380")
 startbcl380 = tic;
-[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, round(Nbcl380*FRACPOP), MAXGEN, Nbcl380,  ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, round(Nbcl380*FRACPOP), MAXGEN, Nbcl380,  ELIT, PROC, CROSSR, PR, 'Ordered_crossover', LOOP,'sus');
 t_bcl380 = toc(startbcl380);
 for i = 1 : size(best_bcl380,2)
    if (best_bcl380(1,i) == 0)
@@ -80,7 +80,7 @@ disp("Time: " + t_bcl380 + " Tours: " + best_bcl380 + " at generation: " + gen_b
 
 disp("xql662")
 startxql662 = tic;
-[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, round(Nxql662*FRACPOP), MAXGEN, Nxql662,  ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, round(Nxql662*FRACPOP), MAXGEN, Nxql662,  ELIT, PROC, CROSSR, PR, 'Ordered_crossover', LOOP,'sus');
 t_xql662 = toc(startxql662);
 for i = 1 : size(best_xql662,2)
    if (best_xql662(1,i) == 0)
@@ -94,7 +94,7 @@ disp("Time: " + t_xql662 + " Tours: " + best_xql662 + " at generation: " + gen_x
 
 disp("rbx711")
 startrbx711 = tic;
-[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, round(Nrbx711*FRACPOP), MAXGEN, Nrbx711,  ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, round(Nrbx711*FRACPOP), MAXGEN, Nrbx711,  ELIT, PROC, CROSSR, PR, 'Ordered_crossover', LOOP,'sus');
 t_rbx711 = toc(startrbx711);
 for i = 1 : size(best_rbx711,2)
    if (best_rbx711(1,i) == 0)
