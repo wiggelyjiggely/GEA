@@ -33,12 +33,12 @@ xxql662=xql662(:,1);%/max([xql662(:,1);xql662(:,2)]);
 yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
 
-[fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.4, STOP_PERCENTAGE, 0.6, 0.5, 'Ordered_crossover', LOCALLOOP,'sus');
+%[fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.4, STOP_PERCENTAGE, 0.6, 0.5, 'Ordered_crossover', LOCALLOOP,'sus');
 
 % Set the parameters for lshga
-MAXGEN=500;	% Maximum no. of generations
+MAXGEN=1000;	% Maximum no. of generations
 
-% Run the five benchmarks with the lshga algorithm
+% Run the five benchmarks with the ex3 algorithm
 disp("Belgium")
 startbel = tic;
 [mean_belgium,~,best_belgium] = run_ga_custom_wlm(xbelgium, ybelgium, 100, MAXGEN, Nbelgium, 0.4, 1, 0.6, 0.5, 'Ordered_crossover', 0,'sus');

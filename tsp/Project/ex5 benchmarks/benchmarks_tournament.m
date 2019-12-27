@@ -34,4 +34,38 @@ yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
 
 
-[fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.3, STOP_PERCENTAGE, 0.2, 0.6, 'xalt_edges', LOCALLOOP,'tournament');
+%[fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.3, STOP_PERCENTAGE, 0.2, 0.6, 'xalt_edges', LOCALLOOP,'tournament');
+
+% Set the parameters for lshga
+MAXGEN=500;	% Maximum no. of generations
+
+% Run the five benchmarks with the tournament algorithm
+disp("Belgium")
+startbel = tic;
+[mean_belgium,~,best_belgium] = run_ga_custom_wlm(xbelgium, ybelgium, 100, MAXGEN, Nbelgium, 0.3, 1, 0.2, 0.6, 'xalt_edges', 0,'tournament');
+t_bel = toc(startbel)
+best_belgium = best_belgium(1,size(best_belgium,2))
+
+disp("xqf131")
+startxqf131 = tic;
+[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, 100, MAXGEN, Nxqf131, 0.3, 1, 0.2, 0.6, 'xalt_edges', 0,'tournament');
+t_xqf131 = toc(startxqf131)
+best_xqf131 = best_xqf131(1,size(best_xqf131,2))
+
+disp("bcl380")
+startbcl380 = tic;
+[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, 100, MAXGEN, Nbcl380, 0.3, 1, 0.2, 0.6, 'xalt_edges', 0,'tournament');
+t_bcl380 = toc(startbcl380)
+best_bcl380 = best_bcl380(1,size(best_bcl380,2))
+
+disp("xql662")
+startxql662 = tic;
+[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, 100, MAXGEN, Nxql662, 0.3, 1, 0.2, 0.6, 'xalt_edges', 0,'tournament');
+t_xql662 = toc(startxql662)
+best_xql662 = best_xql662(1,size(best_xql662,2))
+
+disp("rbx711")
+startrbx711 = tic;
+[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, 100, MAXGEN, Nrbx711, 0.3, 1, 0.2, 0.6, 'xalt_edges', 0,'tournament');
+t_rbx711 = toc(startrbx711)
+best_rbx711 = best_rbx711(1,size(best_rbx711,2))
