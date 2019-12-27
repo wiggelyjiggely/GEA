@@ -34,25 +34,21 @@ yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
 
 % Set the parameters for lshga
-MAXGEN=10000;	
-PROC = 0.7;         
-LOOP = 1;
-FRACPOP = 0.5;
-ELIT = 0.1;
-CROSSR = 0.3;
-PR= 0.5;
+MAXGEN=10000;	% Maximum no. of generations
 
 % Run the five benchmarks with the lshga algorithm
-
 %disp("Belgium")
 %startbel = tic;
 %[mean_belgium,~,best_belgium] = run_ga_custom_wlm(xbelgium, ybelgium, 100, MAXGEN, Nbelgium, 0.1, 1, 0.3, 0.5, 'xalt_edges', 0,'sus');
 %t_bel = toc(startbel)
 %best_belgium = best_belgium(1,size(best_belgium,2))
 
+PROC = 0.8;
+LOOP = 1;
+
 disp("xqf131")
 startxqf131 = tic;
-[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, round(Nxqf131*FRACPOP), MAXGEN, Nxqf131, ELIT, PROC, CROSSR, PR, 'xalt_edges', LOOP,'sus');
+[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, round(Nxqf131/2), MAXGEN, Nxqf131, 0.1, PROC, 0.3, 0.5, 'xalt_edges', LOOP,'sus');
 t_xqf131 = toc(startxqf131);
 for i = 1 : size(best_xqf131,2)
    if (best_xqf131(1,i) == 0)
@@ -66,7 +62,7 @@ disp("Time: " + t_xqf131 + " Tours: " + best_xqf131 + " at generation: " + gen_x
 
 disp("bcl380")
 startbcl380 = tic;
-[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, round(Nbcl380*FRACPOP), MAXGEN, Nbcl380,  ELIT, PROC, CROSSR, PR, 'xalt_edges', LOOP,'sus');
+[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, round(Nbcl380/2), MAXGEN, Nbcl380, 0.1, PROC, 0.3, 0.5, 'xalt_edges', LOOP,'sus');
 t_bcl380 = toc(startbcl380);
 for i = 1 : size(best_bcl380,2)
    if (best_bcl380(1,i) == 0)
@@ -80,7 +76,7 @@ disp("Time: " + t_bcl380 + " Tours: " + best_bcl380 + " at generation: " + gen_b
 
 disp("xql662")
 startxql662 = tic;
-[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, round(Nxql662*FRACPOP), MAXGEN, Nxql662,  ELIT, PROC, CROSSR, PR, 'xalt_edges', LOOP,'sus');
+[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, round(Nxql662/2), MAXGEN, Nxql662, 0.1, PROC, 0.3, 0.5, 'xalt_edges', LOOP,'sus');
 t_xql662 = toc(startxql662);
 for i = 1 : size(best_xql662,2)
    if (best_xql662(1,i) == 0)
@@ -94,9 +90,9 @@ disp("Time: " + t_xql662 + " Tours: " + best_xql662 + " at generation: " + gen_x
 
 disp("rbx711")
 startrbx711 = tic;
-[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, round(Nrbx711*FRACPOP), MAXGEN, Nrbx711,  ELIT, PROC, CROSSR, PR, 'xalt_edges', LOOP,'sus');
+[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, round(Nrbx711/2), MAXGEN, Nrbx711, 0.1, PROC, 0.3, 0.5, 'xalt_edges', LOOP,'sus');
 t_rbx711 = toc(startrbx711);
-for i = 1 : size(best_rbx711,2)
+for i = 1 : size(v,2)
    if (best_rbx711(1,i) == 0)
         break;
    end

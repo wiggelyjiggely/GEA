@@ -33,38 +33,75 @@ xxql662=xql662(:,1);%/max([xql662(:,1);xql662(:,2)]);
 yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
 
-[fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.4, STOP_PERCENTAGE, 0.6, 0.5, 'Ordered_crossover', LOCALLOOP,'sus');
-
 % Set the parameters for lshga
-MAXGEN=500;	% Maximum no. of generations
+MAXGEN=10000;	
+PROC = 0.7;         
+LOOP = 0;
+FRACPOP = 0.5;
+ELIT = 0.4;
+CROSSR = 0.6;
+PR = 0.5;
 
 % Run the five benchmarks with the lshga algorithm
-disp("Belgium")
-startbel = tic;
-[mean_belgium,~,best_belgium] = run_ga_custom_wlm(xbelgium, ybelgium, 100, MAXGEN, Nbelgium, 0.4, 1, 0.6, 0.5, 'Ordered_crossover', 0,'sus');
-t_bel = toc(startbel)
-best_belgium = best_belgium(1,size(best_belgium,2))
+
+%disp("Belgium")
+%startbel = tic;
+%[mean_belgium,~,best_belgium] = run_ga_custom_wlm(xbelgium, ybelgium, 100, MAXGEN, Nbelgium, 0.1, 1, 0.3, 0.5, 'xalt_edges', 0,'sus');
+%t_bel = toc(startbel)
+%best_belgium = best_belgium(1,size(best_belgium,2))
 
 disp("xqf131")
 startxqf131 = tic;
-[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, 100, MAXGEN, Nxqf131, 0.4, 1, 0.6, 0.5, 'Ordered_crossover', 0,'sus');
-t_xqf131 = toc(startxqf131)
-best_xqf131 = best_xqf131(1,size(best_xqf131,2))
+[mean_xqf131,~,best_xqf131] = run_ga_custom_wlm(xxqf131, yxqf131, round(Nxqf131*FRACPOP), MAXGEN, Nxqf131, ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+t_xqf131 = toc(startxqf131);
+for i = 1 : size(best_xqf131,2)
+   if (best_xqf131(1,i) == 0)
+        break;
+   end
+end
+best_xqf131 = best_xqf131(1,i-1);
+gen_xqf131 = i-1;
+
+disp("Time: " + t_xqf131 + " Tours: " + best_xqf131 + " at generation: " + gen_xqf131);
 
 disp("bcl380")
 startbcl380 = tic;
-[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, 100, MAXGEN, Nbcl380, 0.4, 1, 0.6, 0.5, 'Ordered_crossover', 0,'sus');
-t_bcl380 = toc(startbcl380)
-best_bcl380 = best_bcl380(1,size(best_bcl380,2))
+[mean_bcl380,~,best_bcl380] = run_ga_custom_wlm(xbcl380, ybcl380, round(Nbcl380*FRACPOP), MAXGEN, Nbcl380,  ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+t_bcl380 = toc(startbcl380);
+for i = 1 : size(best_bcl380,2)
+   if (best_bcl380(1,i) == 0)
+        break;
+   end
+end
+best_bcl380 = best_bcl380(1,i-1);
+gen_bcl380 = i-1;
+
+disp("Time: " + t_bcl380 + " Tours: " + best_bcl380 + " at generation: " + gen_bcl380);
 
 disp("xql662")
 startxql662 = tic;
-[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, 100, MAXGEN, Nxql662, 0.4, 1, 0.6, 0.5, 'Ordered_crossover', 0,'sus');
-t_xql662 = toc(startxql662)
-best_xql662 = best_xql662(1,size(best_xql662,2))
+[mean_xql662,~,best_xql662] = run_ga_custom_wlm(xxql662, yxql662, round(Nxql662*FRACPOP), MAXGEN, Nxql662,  ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+t_xql662 = toc(startxql662);
+for i = 1 : size(best_xql662,2)
+   if (best_xql662(1,i) == 0)
+        break;
+   end
+end
+best_xql662 = best_xql662(1,i-1);
+gen_xql662 = i-1;
+
+disp("Time: " + t_xql662 + " Tours: " + best_xql662 + " at generation: " + gen_xql662);
 
 disp("rbx711")
 startrbx711 = tic;
-[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, 100, MAXGEN, Nrbx711, 0.4, 1, 0.6, 0.5, 'Ordered_crossover', 0,'sus');
-t_rbx711 = toc(startrbx711)
-best_rbx711 = best_rbx711(1,size(best_rbx711,2))
+[mean_rbx711,~,best_rbx711] = run_ga_custom_wlm(xrbx711, yrbx711, round(Nrbx711*FRACPOP), MAXGEN, Nrbx711,  ELIT, PROC, CROSSR, PR, 'Orderd_crossover', LOOP,'sus');
+t_rbx711 = toc(startrbx711);
+for i = 1 : size(best_rbx711,2)
+   if (best_rbx711(1,i) == 0)
+        break;
+   end
+end
+best_rbx711 = best_rbx711(1,i-1);
+gen_rbx771 = i-1;
+
+disp("Time: " + t_rbx711 + " Tours: " + best_rbx711 + " at generation: " + gen_rbx771);

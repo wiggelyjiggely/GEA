@@ -16,7 +16,7 @@ function [mean_fits,minimum,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, 
 % CROSSOVER: the crossover operator
 % calculate distance matrix between each pair of cities
 % ah1, ah2, ah3: axes handles to visualise tsp
-{NIND MAXGEN NVAR ELITIST STOP_PERCENTAGE PR_CROSS PR_MUT CROSSOVER LOCALLOOP}
+%{NIND MAXGEN NVAR ELITIST STOP_PERCENTAGE PR_CROSS PR_MUT CROSSOVER LOCALLOOP}
 
 
     GGAP = 1 - ELITIST;
@@ -48,6 +48,8 @@ function [mean_fits,minimum,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, 
     end
     best=zeros(1,MAXGEN);
     % generational loop
+    bly = 0;
+    bly2 = 0;
     while gen<MAXGEN
         sObjV=sort(ObjV);
         best(gen+1)=min(ObjV);
@@ -89,5 +91,12 @@ function [mean_fits,minimum,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, 
 
         %increment generation counter
         gen=gen+1; 
+        
+        prog = round((gen/MAXGEN)*100);
+        msg = [int2str(prog)  repmat('-',1,prog) repmat('_',1,100-prog) num2str(best(gen))];
+        
+        fprintf(repmat('\b',1,bly));
+        fprintf(msg);
+        bly=numel(msg);
     end
 end
