@@ -34,7 +34,7 @@ yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
 
 % Set the parameters for lshga
-MAXGEN=10000;	
+MAXGEN=1000;	
 PROC = 0.7;         
 LOOP = 1;
 FRACPOP = 0.5;
