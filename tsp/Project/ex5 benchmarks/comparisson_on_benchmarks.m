@@ -24,7 +24,7 @@ DatasetNames = ["xbcl380","belgium","rbx711","xqf131","xql662"];
 
 %% Set the parameters
 % Set the common parameters
-MAXGEN=10;
+MAXGEN=10000;
 FRACPOP = 2;
 PROC = 0.95;
 LOOP = 0;
@@ -95,4 +95,19 @@ for i = 1 : size(DatasetsToUse,2)
                 
         disp(" Time: " + time(1,j) + " Tours: " + best + " at generation: " + gen);
     end
+    
+    figure;
+    X = 1:MAXGEN;
+    yplotbests = best_fitness_values;
+    yplotbests(yplotbests==0) = NaN;
+    for j = 1 : size(Methods,2)
+        plot(X,yplotbests(j,1:MAXGEN),'DisplayName',"Method="+MethodNames(Methods(j)));
+        hold on;
+    end
+    title("Comparison of methods with population size = " + int2str(round(NVAR*FRACPOP)) + " and for " +int2str(MAXGEN) + " generations")
+    xlabel("Generation");
+    ylabel("Fitness values");
+    legend show
+    hold off
+
 end
