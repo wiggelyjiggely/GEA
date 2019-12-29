@@ -21,6 +21,7 @@ MethodMutations = ["sus","sus","tournament","sus",""];
 %   5: xql662  (NVAR = 662)
 DatasetsToUse = [4,1,5,3];
 DatasetNames = ["xbcl380","belgium","rbx711","xqf131","xql662"];
+DatasetOptimals = [1621,NaN,3115,564,2513];
 
 %% Set the parameters
 % Set the common parameters
@@ -52,6 +53,7 @@ PR(1,4) = 0.6;
 % Set the parameters for 
 Ke = 0.1;       % Elistism constant
 Kc = 1;         % Crossover constant
+Pm = 1;
 
 %% Load the data sets
 datasetslist = dir('../ex5 benchmarks/benchmarks/');
@@ -78,9 +80,9 @@ for i = 1 : size(DatasetsToUse,2)
         disp("Running " + MethodNames(Methods(j)) + " on dataset " + DatasetNames(DatasetsToUse(i)))
         start = tic;
         if Methods(j) == 5
-            [mean_fitness_values(j,:),~,best_fitness_values(j,:)] = run_ga_custom_wlm(x, y, round(NVAR*FRACPOP), MAXGEN, NVAR, ELIT(1,j), PROC, CROSSR(1,j), PR(1,j), MethodCrossvers(Methods(j)), LOOP,MethodMutations(Methods(j)));
+            [mean_fitness_values(j,1:MAXGEN),best_fitness_values(j,1:MAXGEN)] = lsgha_ours(x, y, round(NVAR*FRACPOP), MAXGEN, NVAR, Kc, Pm, Ke);
         else
-            [mean_fitness_values(j,:),best_fitness_values(j,:)] =
+            [mean_fitness_values(j,:),~,best_fitness_values(j,:)] = run_ga_custom_wlm(x, y, round(NVAR*FRACPOP), MAXGEN, NVAR, ELIT(1,j), PROC, CROSSR(1,j), PR(1,j), MethodCrossvers(Methods(j)), LOOP,MethodMutations(Methods(j)));
         end
         time(1,j) = toc(start);
         for k = 1 : size(best_fitness_values,2)
@@ -94,4 +96,22 @@ for i = 1 : size(DatasetsToUse,2)
                 
         disp(" Time: " + time(1,j) + " Tours: " + best + " at generation: " + gen);
     end
+    
+    figure;
+    X = 1:MAXGEN;
+    yplotbests = best_fitness_values;
+    yplotbests(yplotbests==0) = NaN;
+    for j = 1 : size(Methods,2)
+        plot(X,yplotbests(j,1:MAXGEN),'DisplayName',"Method="+MethodNames(Methods(j)));
+        hold on;
+    end
+    ploty(DatasetOptimals(dataset);
+    title("Comparison of methods with population size = " + int2str(round(NVAR*FRACPOP)) + " and for " +int2str(MAXGEN) + " generations")
+    xlabel("Generation");
+    ylabel("Fitness values");
+    legend show
+    hold off
+    
+    time
+
 end

@@ -19,12 +19,13 @@ MethodMutations = ["sus","sus","tournament","sus",""];
 %   3: rbx711  (NVAR = 711)
 %   4: xqf131  (NVAR = 131)
 %   5: xql662  (NVAR = 662)
-DatasetsToUse = [4]; %[4,1,5,3];
+DatasetsToUse = [4,1,5,3];
 DatasetNames = ["xbcl380","belgium","rbx711","xqf131","xql662"];
+DatasetOptimals = [1621,NaN,3115,564,2513];
 
 %% Set the parameters
 % Set the common parameters
-MAXGEN=10000;
+MAXGEN=10;
 FRACPOP = 2;
 PROC = 0.95;
 LOOP = 0;
@@ -104,10 +105,13 @@ for i = 1 : size(DatasetsToUse,2)
         plot(X,yplotbests(j,1:MAXGEN),'DisplayName',"Method="+MethodNames(Methods(j)));
         hold on;
     end
+    yline(DatasetOptimals(DatasetsToUse(i)));
     title("Comparison of methods with population size = " + int2str(round(NVAR*FRACPOP)) + " and for " +int2str(MAXGEN) + " generations")
     xlabel("Generation");
     ylabel("Fitness values");
     legend show
     hold off
+    
+    time
 
 end
