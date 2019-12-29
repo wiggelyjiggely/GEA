@@ -25,8 +25,8 @@ DatasetOptimals = [1621,NaN,3115,564,2513];
 
 %% Set the parameters
 % Set the common parameters
-MAXGEN=10;
-FRACPOP = 2;
+MAXGEN=10000;
+FRACPOP = 1;
 PROC = 0.95;
 LOOP = 0;
 
