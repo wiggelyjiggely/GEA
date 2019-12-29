@@ -19,7 +19,7 @@ MethodMutations = ["sus","sus","tournament","sus",""];
 %   3: rbx711  (NVAR = 711)
 %   4: xqf131  (NVAR = 131)
 %   5: xql662  (NVAR = 662)
-DatasetsToUse = [4]; %[4,1,5,3];
+DatasetsToUse = [4,1,5,3];
 DatasetNames = ["xbcl380","belgium","rbx711","xqf131","xql662"];
 
 %% Set the parameters
@@ -52,7 +52,6 @@ PR(1,4) = 0.6;
 % Set the parameters for 
 Ke = 0.1;       % Elistism constant
 Kc = 1;         % Crossover constant
-Pm = 1;
 
 %% Load the data sets
 datasetslist = dir('../ex5 benchmarks/benchmarks/');
@@ -79,9 +78,9 @@ for i = 1 : size(DatasetsToUse,2)
         disp("Running " + MethodNames(Methods(j)) + " on dataset " + DatasetNames(DatasetsToUse(i)))
         start = tic;
         if Methods(j) == 5
-            [mean_fitness_values(j,1:MAXGEN),best_fitness_values(j,1:MAXGEN)] = lsgha_ours(x, y, round(NVAR*FRACPOP), MAXGEN, NVAR, Kc, Pm, Ke);
-        else
             [mean_fitness_values(j,:),~,best_fitness_values(j,:)] = run_ga_custom_wlm(x, y, round(NVAR*FRACPOP), MAXGEN, NVAR, ELIT(1,j), PROC, CROSSR(1,j), PR(1,j), MethodCrossvers(Methods(j)), LOOP,MethodMutations(Methods(j)));
+        else
+            [mean_fitness_values(j,:),best_fitness_values(j,:)] =
         end
         time(1,j) = toc(start);
         for k = 1 : size(best_fitness_values,2)
