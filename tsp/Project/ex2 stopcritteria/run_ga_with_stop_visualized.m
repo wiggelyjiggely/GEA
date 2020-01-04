@@ -90,7 +90,16 @@ function [mean_fits,minimum,best,stop,stop_values] = run_ga_with_stop_visualized
 
             if (sObjV(stopN)-sObjV(1) <= 1e-15)
                   stop(1,gen+1) = true;
-            end 
+            end
+            EqualGen = 1;
+            for i = 2 : NIND-1
+                if (sObjV(i)-sObjV(1) <= 1e-15)
+                   EqualGen = i; 
+                else
+                    break
+                end
+            end
+            stop_values(1,gen+1) = EqualGen/NIND;
             
             %ratio = (mean_fits(gen+1)-best(gen+1)) / best(gen+1);
             %stop_values(6,gen+1) = ratio;

@@ -2,14 +2,14 @@
 clear;clc;
 
 % Set the parameters
-NIND=500;		% Number of individuals
-MAXGEN=1000;		% Maximum no. of generations
+NIND=100;		% Number of individuals
+MAXGEN=2000;		% Maximum no. of generations
 X=(1:MAXGEN);   % X values for plotting the generations
 NVAR=26;		% No. of variables
 PRECI=1;		% Precision of variables
 ELITIST=0.9;    % percentage of the elite population
 GGAP=1-ELITIST;		% Generation gap
-STOP_PERCENTAGE=1;    % percentage of equal fitness individuals for stopping
+STOP_PERCENTAGE=0.5;    % percentage of equal fitness individuals for stopping
 STOP_GEN_AVERAGE = 10; % amount of generations the average fitness does not change
 STOP_PERCENTAGE_AVERAGE = 0.0001; % percentage of change for the average fitness
 STOP_GEN_BEST = 100; % amount of generations the best fitness does not change
@@ -98,129 +98,21 @@ legend("Generations best did not improve", "Generations mean did not improve")
 xlabel("Generation");
 ylabel("Generations");
 
-
-
-% Visualizing 
+% Visualizing the tunede stop criteria
 figure;
-subplot(5,2,1)
 plot((1:1:sizesparse),sparsemean(1:sizesparse),'DisplayName',"Mean Fit");
-x1 = find(stop(1,:),1,"first");
-if (~isempty(x1))
-    xline(x1,'-.',"Stopcriterium 1");
-end
-x2 = find(stop(2,:),1,"first");
-if (~isempty(x2))
-    xline(x2,'-.',"Stopcriterium 2");
-end
-x3 = find(stop(3,:),1,"first");
-if (~isempty(x3))
-    xline(x3,'-.',"Stopcriterium 3");
-end
-x4 = find(stop(4,:),1,"first");
-if (~isempty(x4))
-    xline(x4,'-.',"Stopcriterium 4");
-end
-xlabel("Generation");
-ylabel("Mean fitness value");
-
-
-subplot(5,2,3)
-plot(X,EMean(1,:),'DisplayName',"Best Fit");
-%legend("Time is not penaltized")
-xlabel("Generation");
-ylabel("Efficiency value of the mean");
-for iSMean = 1:iSMeanMax
-    xline(SMean(1,iSMean),'--r',num2str(UMean(iSMean)));
-end
-
-subplot(5,2,5)
-plot(X(1:500),EMean(2,1:500),'DisplayName',"Best Fit");
-%legend("Time is penaltized is a logarithmic manner")
-xlabel("Generation");
-ylabel("Efficiency value of the mean");
-for iSMean = 1:iSMeanMax
-    if SMean(2,iSMean) < 500
-        xline(SMean(2,iSMean),'--r',num2str(UMean(iSMean)));
-    end
-end
-
-subplot(5,2,7)
-plot(X(1:200),EMean(3,1:200),'DisplayName',"Best Fit");
-%legend("Time is penaltized is a square linear manner")
-xlabel("Generation");
-ylabel("Efficiency value of the mean");
-for iSMean = 1:iSMeanMax
-    xline(SMean(3,iSMean),'--r',num2str(UMean(iSMean)));
-end
-
-subplot(5,2,9)
-plot(X(1:200),EMean(4,1:200),'DisplayName',"Best Fit");
-%legend("Time is penaltized in a quadratic manner")
-xlabel("Generation");
-ylabel("Efficiency value of the mean");
-for iSMean = 1:iSMeanMax
-    xline(SMean(4,iSMean),'--r',num2str(UMean(iSMean)));
-end
-
-subplot(5,2,2)
 plot([1:1:MAXGEN],best(1:MAXGEN),'DisplayName',"Best Fit");
 x1 = find(stop(1,:),1,"first");
 if (~isempty(x1))
-    xline(x1,'-.',"Stopcriterium 1");
+    xline(x1,'-.',"Variance threshold reached");
 end
 x2 = find(stop(2,:),1,"first");
 if (~isempty(x2))
-    xline(x2,'-.',"Stopcriterium 2");
+    xline(x2,'-.',"No improved mean fitness");
 end
 x3 = find(stop(3,:),1,"first");
 if (~isempty(x3))
-    xline(x3,'-.',"Stopcriterium 3");
-end
-x4 = find(stop(4,:),1,"first");
-if (~isempty(x4))
-    xline(x4,'-.',"Stopcriterium 4");
+    xline(x3,'-.',"No improved best fitness");
 end
 xlabel("Generation");
-ylabel("Best fitness value");
-
-
-subplot(5,2,4)
-plot(X,EBest(1,:),'DisplayName',"Best Fit");
-%legend("Time is not penaltized")
-xlabel("Generation");
-ylabel("Efficiency value of the best");
-for iSBest = 1:iSBestMax
-    xline(SBest(1,iSBest),'--r',num2str(UBest(iSBest)));
-end
-
-subplot(5,2,6)
-plot(X(1:500),EBest(2,1:500),'DisplayName',"Best Fit");
-%legend("Time is penaltized is a logarithmic manner")
-xlabel("Generation");
-ylabel("Efficiency value of the best");
-for iSBest = 1:iSBestMax
-    if SBest(2,iSBest) < 500
-        xline(SBest(2,iSBest),'--r',num2str(UBest(iSBest)));
-    end
-end
-
-subplot(5,2,8)
-plot(X(1:100),EBest(3,1:100),'DisplayName',"Best Fit");
-%legend("Time is penaltized is a linear manner")
-xlabel("Generation");
-ylabel("Efficiency value of the best");
-for iSBest = 1:iSBestMax
-    xline(SBest(3,iSBest),'--r',num2str(UBest(iSBest)));
-end
-
-subplot(5,2,10)
-plot(X(1:100),EBest(4,1:100),'DisplayName',"Best Fit");
-%legend("Time is penaltized in a quadratic manner")
-xlabel("Generation");
-ylabel("Efficiency value of the best");
-for iSBest = 1:iSBestMax
-    xline(SBest(4,iSBest),'--r',num2str(UBest(iSBest)));
-end
-
-
-hold off;
+ylabel("Mean fitness value");

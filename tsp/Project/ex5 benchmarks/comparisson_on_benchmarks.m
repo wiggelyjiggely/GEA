@@ -8,7 +8,7 @@ clear;clc;
 %   3: Tournament selection
 %   4: Stochastic remainder selection
 %   5: Local Search Heuristic Genetic Algorithm
-Methods = [1,2,3,4,5];
+Methods = [3,4,5];
 MethodNames = ["Base","Ex3","Tournament","SRS","LSHGA"];
 MethodCrossvers = ["xalt_edges","Ordered_crossover","xalt_edges","xalt_edges",""];
 MethodMutations = ["sus","sus","tournament","sus",""];
@@ -19,14 +19,14 @@ MethodMutations = ["sus","sus","tournament","sus",""];
 %   3: rbx711  (NVAR = 711)
 %   4: xqf131  (NVAR = 131)
 %   5: xql662  (NVAR = 662)
-DatasetsToUse = [4,1,5,3];
+DatasetsToUse = [4,1];
 DatasetNames = ["xbcl380","belgium","rbx711","xqf131","xql662"];
 DatasetOptimals = [1621,NaN,3115,564,2513];
 
 %% Set the parameters
 % Set the common parameters
 MAXGEN=10000;
-FRACPOP = 1;
+FRACPOP = 0.5;
 PROC = 0.95;
 LOOP = 0;
 
