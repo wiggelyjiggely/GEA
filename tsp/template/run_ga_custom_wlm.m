@@ -1,4 +1,4 @@
-function [mean_fits,minimum,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, sls)
+function [mean_fits,gen_fit_time,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, sls)
 % usage: run_ga(x, y, 
 %               NIND, MAXGEN, NVAR, 
 %               ELITIST, STOP_PERCENTAGE, 
@@ -16,8 +16,11 @@ function [mean_fits,minimum,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, 
 % CROSSOVER: the crossover operator
 % calculate distance matrix between each pair of cities
 % ah1, ah2, ah3: axes handles to visualise tsp
-%{NIND MAXGEN NVAR ELITIST STOP_PERCENTAGE PR_CROSS PR_MUT CROSSOVER LOCALLOOP}
+{NIND MAXGEN NVAR ELITIST STOP_PERCENTAGE PR_CROSS PR_MUT CROSSOVER LOCALLOOP}
 
+
+    gen_fit_time = zeros(3,MAXGEN);
+    t = cputime;
 
     GGAP = 1 - ELITIST;
     mean_fits=zeros(1,MAXGEN+1);
@@ -87,10 +90,16 @@ function [mean_fits,minimum,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, 
             Chrom = tsp_ImprovePopulation(NIND, NVAR, Chrom,LOCALLOOP,Dist);
         else
             Chrom = tsp_improvePopulationPathrep(NIND, NVAR, Chrom,LOCALLOOP,Dist);
-        end
+         end
 
+
+        
         %increment generation counter
         gen=gen+1; 
+
+        gen_fit_time(1,gen) = gen;
+        gen_fit_time(2,gen) = cputime-t;
+        gen_fit_time(3,gen) = best(gen);
         
         prog = round((gen/MAXGEN)*100);
         msg = [int2str(prog)  repmat('-',1,prog) repmat('_',1,100-prog) num2str(best(gen))];

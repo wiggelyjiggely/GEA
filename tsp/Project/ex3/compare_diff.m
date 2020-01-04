@@ -16,7 +16,7 @@ LOCALLOOP=0;      % local loop removal
 CROSSOVER = 'Ordered_crossover';  % default crossover operator
 
 % load the data sets
-datasetslist = dir('datasets/');
+datasetslist = dir('../datasets/');
 %datasetslist = dir('datasets/');
 datasets=cell( size(datasetslist,1)-2,1);datasets=cell( size(datasetslist,1)-2 ,1);
 for i=1:size(datasets,1);
@@ -24,11 +24,10 @@ for i=1:size(datasets,1);
 end
 
 % start with first dataset
-data = load(['../template/datasets/' datasets{11}]);
+data = load(['../datasets/' datasets{11}]);
 x=data(:,1)/max([data(:,1);data(:,2)]);y=data(:,2)/max([data(:,1);data(:,2)]);
 NVAR=size(data,1);
 figure;
-title("Population: " + NIND);
 hold on;
 amountOfRuns = 10;
 timinglist = zeros(3,9);
@@ -65,7 +64,7 @@ for jump2 = [1]
             %perform genetic algorithm: return best,mean and set time it
             %takes to perform algorithm
             t = cputime;
-            [fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.3, STOP_PERCENTAGE, PR_CROSS, PR_MUT, 'xalt_edges', LOCALLOOP,'tournamnent');
+            [fit,min,best] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.1, STOP_PERCENTAGE, 0.3, 0.5, 'xalt_edges', LOCALLOOP,'sus');
             listtime(run,1) = cputime-t;
             
             sparsemean = sparse(fit);
@@ -77,7 +76,7 @@ for jump2 = [1]
             %perform genetic algorithm: return best,mean and set time it
             %takes to perform algorithm
             t1 = cputime;
-            [fit1,min1,best1] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.4, STOP_PERCENTAGE, 0.4, 0.4, 'xalt_edges', LOCALLOOP,'tournament2');
+            [fit1,min1,best1] = run_ga_custom_wlm(x, y, 100, MAXGEN, NVAR, 0.3, STOP_PERCENTAGE, 0.2, 0.6, 'xalt_edges', LOCALLOOP,'tournament2');
             listtime1(run,1) = cputime-t1;
 
             sparsemean1 = sparse(fit1);
@@ -89,8 +88,8 @@ for jump2 = [1]
             %perform genetic algorithm: return best,mean and set time it
             %takes to perform algorithm
              t2 = cputime;
-            [fit2,min2,best2] = run_ga_custom_wlm(x, y, 500, MAXGEN, NVAR, 0.3, STOP_PERCENTAGE, 0.4, 0.4, 'xalt_edges', LOCALLOOP,'srs');
-            listtime2(run,1) = cputime2-t1;
+            [fit2,min2,best2] = run_ga_custom_wlm(x, y, 500, MAXGEN, NVAR, 0.4, STOP_PERCENTAGE, 0.2, 0.6, 'xalt_edges', LOCALLOOP,'srs');
+            listtime2(run,1) = cputime-t2;
 
             sparsemean2 = sparse(fit2);
             sizesparse2 = nnz(sparsemean2);
@@ -169,9 +168,9 @@ for jump2 = [1]
         
         jj = jj + 1;
         %subplot(1,2,1);
-        plot([1:1:sizesparse],sparsemean(1:sizesparse),'DisplayName',"Mean fitness tournament wh sel");
+        plot([1:1:sizesparse],sparsemean(1:sizesparse),'DisplayName',"Mean fitness susl");
         hold on;
-        plot([1:1:sizesbest],sparsebest(1:sizesbest),'DisplayName',"Best fitness tournament wh sel");
+        plot([1:1:sizesbest],sparsebest(1:sizesbest),'DisplayName',"Best fitness sus");
         hold on;
         plot([1:1:sizesparse1],sparsemean1(1:sizesparse1),'DisplayName',"Mean fitness tournament w sel");
         hold on
@@ -193,7 +192,9 @@ for jump2 = [1]
         %hold on;
     end
     ii = ii+1;
-
+    listtime
+    listtime1
+    listtime2
 end
 
 
