@@ -33,7 +33,7 @@ xxql662=xql662(:,1);%/max([xql662(:,1);xql662(:,2)]);
 yxql662=xql662(:,2);%/max([xql662(:,1);xql662(:,2)]);
 Nxql662=size(xql662,1);
 
-% Set the parameters for lshga
+% Set the parameters for ex3
 MAXGEN=10000;	
 PROC = 0.95;         
 LOOP = 0;

@@ -36,12 +36,12 @@ Nxql662=size(xql662,1);
 
 % Set the parameters for lshga
 NIND=20;		% Number of individuals
-MAXGEN=5000;	% Maximum no. of generations
+MAXGEN=10000;	% Maximum no. of generations
 PRECI=1;		% Precision of variables
 Ke = 0.1;       % Elistism constant
 Kc = 1;         % Crossover constant
 Km = 0.5;       % Mutation constant
-TNIB = 5;       % Stop criterium
+TNIB = 1000;       % Stop criterium
 % Run the five benchmarks with the lshga algorithm
 disp("Belgium_20")
 startbel = tic;
@@ -72,36 +72,4 @@ startrbx711 = tic;
 [mean_rbx711_20,best_rbx711_20] = run_ga_with_local_heuristics_and_stop(xrbx711, yrbx711, NIND, MAXGEN, Nrbx711, Kc, Km, Ke,TNIB);
 t_rbx711_20 = toc(startrbx711)
 best_rbx711_20 = best_rbx711_20(1,size(best_rbx711_20,2))
-
-% Set the parameters for lshga
-NIND=50;		% Number of individuals
-disp("belgium_50")
-startbel = tic;
-[mean_belgium_50,best_belgium_50] = run_ga_with_local_heuristics_and_stop(xbelgium, ybelgium, NIND, MAXGEN, Nbelgium, Kc, Km, Ke,TNIB);
-t_bel_50 = toc(startbel)
-best_belgium_50 = best_belgium_50(1,size(best_belgium_50,2))
-
-disp("xqf131_50")
-startxqf131 = tic;
-[mean_xqf131_50,best_xqf131_50] = run_ga_with_local_heuristics_and_stop(xxqf131, yxqf131, NIND, MAXGEN, Nxqf131, Kc, Km, Ke,TNIB);
-t_xqf131_50 = toc(startxqf131)
-best_xqf131_50 = best_xqf131_50(1,size(best_xqf131_50,2))
-
-disp("bcl380_50")
-startbcl380 = tic;
-[mean_bcl380_50,best_bcl380_50] = run_ga_with_local_heuristics_and_stop(xbcl380, ybcl380, NIND, MAXGEN, Nbcl380, Kc, Km, Ke,TNIB);
-t_bcl380_50 = toc(startbcl380)
-best_bcl380_50 = best_bcl380_50(1,size(best_bcl380_50,2))
-
-disp("xql662_50")
-startxql662 = tic;
-[mean_xql662_50,best_xql662_50] = run_ga_with_local_heuristics_and_stop(xxql662, yxql662, NIND, MAXGEN, Nxql662, Kc, Km, Ke,TNIB);
-t_xql662_50 = toc(startxql662)
-best_xql662_50 = best_xql662_50(1,size(best_xql662_50,2))
-
-disp("rbx711_50")
-startrbx711 = tic;
-[mean_rbx711_50,best_rbx711_50] = run_ga_with_local_heuristics_and_stop(xrbx711, yrbx711, NIND, MAXGEN, Nrbx711, Kc, Km, Ke,TNIB);
-t_rbx711_50 = toc(startrbx711)
-best_rbx711_50 = best_rbx711_50(1,size(best_rbx711_50,2))
 

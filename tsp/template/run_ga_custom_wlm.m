@@ -1,8 +1,8 @@
 function [mean_fits,gen_fit_time,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, NVAR, ELITIST, STOP_PERCENTAGE, PR_CROSS, PR_MUT, CROSSOVER, LOCALLOOP, sls)
-% usage: run_ga(x, y, 
-%               NIND, MAXGEN, NVAR, 
-%               ELITIST, STOP_PERCENTAGE, 
-%               PR_CROSS, PR_MUT, CROSSOVER, 
+% usage: run_ga(x, y,
+%               NIND, MAXGEN, NVAR,
+%               ELITIST, STOP_PERCENTAGE,
+%               PR_CROSS, PR_MUT, CROSSOVER,
 %               ah1, ah2, ah3)
 %
 %
@@ -63,10 +63,10 @@ function [mean_fits,gen_fit_time,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, N
             if (ObjV(t)==minimum)
                 break;
             end
-        end  
+        end
         if (sObjV(stopN)-sObjV(1) <= 1e-15)
           break;
-        end 
+        end
         %assign fitness values to entire population
         FitnV=ranking(ObjV);
         %select individuals for breeding
@@ -93,17 +93,17 @@ function [mean_fits,gen_fit_time,best] = run_ga_custom_wlm(x, y, NIND, MAXGEN, N
          end
 
 
-        
+
         %increment generation counter
-        gen=gen+1; 
+        gen=gen+1;
 
         gen_fit_time(1,gen) = gen;
         gen_fit_time(2,gen) = cputime-t;
         gen_fit_time(3,gen) = best(gen);
-        
+
         prog = round((gen/MAXGEN)*100);
         msg = [int2str(prog)  repmat('-',1,prog) repmat('_',1,100-prog) num2str(best(gen))];
-        
+
         fprintf(repmat('\b',1,bly));
         fprintf(msg);
         bly=numel(msg);
